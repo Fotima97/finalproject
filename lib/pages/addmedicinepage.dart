@@ -141,10 +141,23 @@ class _AddMedicineState extends State<AddMedicine> {
       ),
       body: SafeArea(
         child: Container(
-          color: backgroundColor,
+          // color: Color(0xFFF5F6FD),
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/pills.jpg"),
+                  fit: BoxFit.cover,
+                  colorFilter:
+                      ColorFilter.mode(Colors.black12, BlendMode.darken))),
           child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 20.0),
-            color: Colors.white,
+            // margin: EdgeInsets.only(
+            //   right: 5.0,
+            //   left: 5.0,
+            //   top: 10.0,
+            // ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5.0),
+            ),
             child: ListView(
               primary: true,
               padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 20.0),
@@ -466,7 +479,9 @@ class _AddMedicineState extends State<AddMedicine> {
                                 ? "Reminder"
                                 : language == rus ? "Напоминание" : "Eslatma",
                           ),
-                          Container(width: 20.0,),
+                          Container(
+                            width: 20.0,
+                          ),
                           Container(
                             child: Switch(
                               value: _switchvalue,
@@ -521,39 +536,55 @@ class _AddMedicineState extends State<AddMedicine> {
                 SizedBox(
                   height: 15.0,
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  child: Material(
-                    elevation: 5.0,
-                    borderRadius: BorderRadius.circular(30.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6.0),
-                          color: accentColor),
-                      child: MaterialButton(
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0)),
-                        height: 60.0,
-                        minWidth: 400.0,
-                        //color: greenColor,
-                        child: Text(
-                          language == eng
-                              ? 'Save'
-                              : language == rus ? "Сохранить" : "Saqlash",
-                          style: TextStyle(color: Colors.white, fontSize: 18.0),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/home', (Route<dynamic> route) => false);
-                        },
-                      ),
-                    ),
-                  ),
-                )
+                // Container(
+                //   alignment: Alignment.center,
+                //   child: Material(
+                //     elevation: 5.0,
+                //     borderRadius: BorderRadius.circular(30.0),
+                //     child: Container(
+                //       decoration: BoxDecoration(
+                //           borderRadius: BorderRadius.circular(6.0),
+                //           color: accentColor),
+                //       child: MaterialButton(
+                //         shape: new RoundedRectangleBorder(
+                //             borderRadius: new BorderRadius.circular(30.0)),
+                //         height: 60.0,
+                //         minWidth: 400.0,
+                //         //color: greenColor,
+                //         child: Text(
+                //           language == eng
+                //               ? 'Save'
+                //               : language == rus ? "Сохранить" : "Saqlash",
+                //           style: TextStyle(color: Colors.white, fontSize: 18.0),
+                //         ),
+                //         onPressed: () {
+                //           Navigator.of(context).pushNamedAndRemoveUntil(
+                //               '/home', (Route<dynamic> route) => false);
+                //         },
+                //       ),
+                //     ),
+                //   ),
+                // )
               ],
             ),
           ),
         ),
+      ),
+      bottomNavigationBar: GestureDetector(
+        child: Container(
+          height: 60.0,
+          color: accentColor,
+          child: Center(
+            child: Text(
+              language == eng
+                  ? 'Save'
+                  : language == rus ? "Сохранить" : "Saqlash",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: 18.0),
+            ),
+          ),
+        ),
+        onTap: () {},
       ),
     );
   }

@@ -1,8 +1,11 @@
 import 'package:finalproject/helpers/authservice.dart';
 import 'package:finalproject/pages/addmedicinepage.dart';
+import 'package:finalproject/pages/doctors.dart';
 import 'package:finalproject/pages/formpage.dart';
 import 'package:finalproject/pages/homepage.dart';
+import 'package:finalproject/pages/hospitalspage.dart';
 import 'package:finalproject/pages/languagepage.dart';
+import 'package:finalproject/pages/newspage.dart';
 import 'package:finalproject/pages/profileeditpage.dart';
 import 'package:finalproject/pages/profilepage.dart';
 import 'package:finalproject/pages/secondpage.dart';
@@ -47,6 +50,9 @@ class MyApp extends StatelessWidget {
         '/profileedit': (BuildContext context) => ProfileEditPage(),
         '/medicineadd': (BuildContext context) => AddMedicine(),
         '/units': (BuildContext context) => UnitsPage(),
+        '/hospitals': (BuildContext context) => HospitalsPage(),
+        '/news': (BuildContext context) => NewsPage(),
+        '/doctors': (BuildContext context) => DoctorsPage(),
       },
     );
   }

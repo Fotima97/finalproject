@@ -226,7 +226,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(context, '/doctors');
+                    },
                   ),
                 ),
                 Expanded(
@@ -265,7 +267,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(context, "/news");
+                    },
                   ),
                 ),
               ],
@@ -306,7 +310,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, '/hospitals');
+              },
             ),
           ],
         ),
