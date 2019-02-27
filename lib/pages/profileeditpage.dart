@@ -14,6 +14,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   TextEditingController _fullname = new TextEditingController();
   TextEditingController _birthdate = new TextEditingController();
   TextEditingController _allergies = new TextEditingController();
+  TextEditingController _email = new TextEditingController();
+
   List<DropdownMenuItem<String>> _dropdDownMenuItems;
   final GlobalKey<FormState> _formkey = new GlobalKey<FormState>();
 
@@ -117,12 +119,13 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   }
 
   _saveUserData(String fullname, String birthdate, String bloodtype,
-      String allergies) async {
+      String allergies, String email) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString(userFullName, fullname);
     preferences.setString(userBirthDate, birthdate);
     preferences.setString(userBloodType, bloodtype);
     preferences.setString(userAllergies, allergies);
+    preferences.setString(userEmail, email);
   }
 
   void _showDatePicker(BuildContext context) {
@@ -208,6 +211,31 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 ),
               ),
               SizedBox(height: 20.0),
+              TextFormField(
+                validator: (value) {
+                  Pattern pattern =
+                      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                  RegExp regex = new RegExp(pattern);
+                  if (value.isNotEmpty && !regex.hasMatch(value))
+                    return 'Enter Valid Email';
+                  else
+                    return null;
+                },
+                controller: _email,
+                autofocus: true,
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                  icon: Icon(
+                    Icons.mail,
+                    color: Colors.black,
+                  ),
+                  labelText: language == eng
+                      ? 'Email'
+                      : language == rus ? "Эл.адрес" : "Elektron pochta",
+                  hintText: "mail@mail.ru",
+                ),
+              ),
+              SizedBox(height: 20.0),
               InputDecorator(
                 decoration: InputDecoration(
                   icon: Image.asset('assets/bloodpng.png', height: 28.0),
@@ -266,11 +294,14 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                         style: TextStyle(color: Colors.white, fontSize: 18.0),
                       ),
                       onPressed: () {
-                        _saveUserData(_fullname.text, _birthdate.text,
-                            _bloodtype, _allergies.text);
-                        _getProfilevalues();
-                        Navigator.of(context).pushReplacementNamed("/profile");
-                        Navigator.of(context).pop();
+                        if (_formkey.currentState.validate()) {
+                          _saveUserData(_fullname.text, _birthdate.text,
+                              _bloodtype, _allergies.text, _email.text);
+                          _getProfilevalues();
+                          Navigator.of(context)
+                              .pushReplacementNamed("/profile");
+                          Navigator.of(context).pop();
+                        }
                       },
                     ),
                   ),

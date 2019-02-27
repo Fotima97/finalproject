@@ -208,6 +208,17 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           Divider(),
           ListTile(
+            trailing: Icon(Icons.mail),
+            title: Text(
+              language == eng
+                  ? 'Email'
+                  : language == rus ? "Эл.адрес" : "Elektron pochta",
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
+            ),
+            subtitle: Text(email),
+          ),
+          Divider(),
+          ListTile(
             trailing: Image.asset(
               'assets/bloodpng.png',
               height: 28.0,

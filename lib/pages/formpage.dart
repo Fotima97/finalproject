@@ -19,6 +19,8 @@ class _FormPageState extends State<FormPage> {
   TextEditingController _fullnameController = new TextEditingController();
   TextEditingController _birthdateController = new TextEditingController();
   TextEditingController _allergiesController = new TextEditingController();
+  TextEditingController _emailController = new TextEditingController();
+
   DateTime selectedDate = DateTime.now();
 
   List<DropdownMenuItem<String>> _dropdDownMenuItems;
@@ -101,12 +103,13 @@ class _FormPageState extends State<FormPage> {
   }
 
   _saveUserData(String fullname, String birthdate, String bloodtype,
-      String allergies) async {
+      String allergies, String email) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString(userFullName, fullname);
     preferences.setString(userBirthDate, birthdate);
     preferences.setString(userBloodType, bloodtype);
     preferences.setString(userAllergies, allergies);
+    preferences.setString(userEmail, email);
   }
 
   _setloginState(bool value) async {
@@ -253,6 +256,42 @@ class _FormPageState extends State<FormPage> {
                       SizedBox(
                         height: blankspace,
                       ),
+                      TextFormField(
+                        validator: (value) {
+                          Pattern pattern =
+                              r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                          RegExp regex = new RegExp(pattern);
+                          if (!regex.hasMatch(value))
+                            return 'Enter Valid Email';
+                          else
+                            return null;
+                        },
+                        controller: _emailController,
+                        autofocus: true,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Color(0xFFE2E4FB),
+                          //focusedBorder: OutlineInputBorder(),
+                          border: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              borderSide:
+                                  BorderSide(color: Colors.red, width: 3.0)),
+                          icon: Icon(
+                            Icons.mail,
+                            color: Colors.white,
+                          ),
+                          labelText: language == eng
+                              ? 'Email'
+                              : language == rus
+                                  ? "Эл.адрес"
+                                  : "Elektron pochta",
+                          hintText: "mail@mail.ru",
+                        ),
+                      ),
+                      SizedBox(
+                        height: blankspace,
+                      ),
                       FormField(
                         builder: (FormFieldState state) {
                           return InputDecorator(
@@ -357,7 +396,8 @@ class _FormPageState extends State<FormPage> {
                                       _fullnameController.text,
                                       _birthdateController.text,
                                       _dropdownvalue,
-                                      _allergiesController.text);
+                                      _allergiesController.text,
+                                      _emailController.text);
                                   _setloginState(true);
                                   Navigator.of(context).pushNamedAndRemoveUntil(
                                       '/home', (Route<dynamic> route) => false);

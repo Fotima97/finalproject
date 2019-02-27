@@ -22,12 +22,12 @@ class _UnitsPageState extends State<UnitsPage> {
           children: <Widget>[
             ListTile(
               title: Text(language == eng
-                  ? "Tablets"
-                  : language == rus ? "Таблетки" : "tabletka"),
+                  ? "Tablet(s)"
+                  : language == rus ? "Таблетка(и)" : "tabletka"),
               onTap: () {
                 dose = language == eng
-                    ? "Tablets"
-                    : language == rus ? "Таблетки" : "tabletka";
+                    ? "Tablet(s)"
+                    : language == rus ? "Таблетка(и)" : "tabletka";
                 Navigator.pop(context);
               },
             ),

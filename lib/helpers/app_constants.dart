@@ -25,6 +25,8 @@ final userFullName = 'fullname';
 final userBirthDate = 'birthdate';
 final userBloodType = 'bloodType';
 final userAllergies = "allergies";
+final userEmail = "email";
+
 final appName = "Final Project";
 final i1 = "i+";
 final i2 = "i-";
@@ -37,3 +39,47 @@ final c2 = "iv-";
 final switchValue = "SwitchValue";
 final loginState = "logged in";
 final photos = "photos";
+final edit = "Edit";
+
+//database
+final medicationTable = "Medications";
+final reminderTable = "Reminders";
+final medId = "MedId";
+final medName = "MedName";
+final shape = "Shape";
+final color = "Color";
+final dosedb = "Dose";
+final units = "Units";
+final times = "Times";
+final startDate = "StartDate";
+final endDate = "EndDate";
+final duration = "Duration";
+final reminderId = "ReminderId";
+final notificationTime = "NotificationTime";
+final token = "Token";
+final notes = "Notes";
+
+//Pills shapes
+final circlepillShape = "assets/circlepill.png";
+final pillShape = "assets/pill2.png";
+final heartShape = 'assets/heart.png';
+final bottleShape = "assets/bottle.png";
+final infusionShape = "assets/infusion.png";
+final lotionShape = "assets/lotion.png";
+final triangleShape = "assets/triangle.png";
+final starShape = "assets/star.png";
+final streamlineShape = "assets/streamline.png";
+final pasteShape = "assets/paste.png";
+
+//Pills colors
+final blueAccent = Colors.blueAccent;
+final red = Colors.red;
+final orange = Colors.orange;
+final purpleAccent = Colors.purpleAccent;
+final cyan = Colors.cyan;
+final green = Colors.green;
+final brown = Colors.brown;
+final indigo = Colors.indigo;
+final teal = Colors.teal;
+final amber = Colors.amber;
+final lime = Colors.lime;

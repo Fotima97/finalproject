@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:finalproject/helpers/app_constants.dart';
+import 'package:finalproject/helpers/dbProvider.dart';
+import 'package:finalproject/helpers/reminderModel.dart';
 import 'package:finalproject/pages/languagepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar/flutter_calendar.dart';
@@ -8,6 +12,7 @@ String fullname = "";
 String birthdate = "";
 String bloodtype = "";
 String allergise = "";
+String email = "";
 List<String> savedImages = [];
 
 class MyHomePage extends StatefulWidget {
@@ -21,12 +26,28 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   double boxHeight = 180.0;
+  List<Reminder> reminders = new List<Reminder>();
   @override
   void initState() {
     checkLanguage();
     _getProfilevalues();
     getsavedImages();
+    updateReminders();
     super.initState();
+  }
+
+  update() async {
+    await DBProvider.db.getRemindersforToday().then((result) {
+      reminders = result;
+    });
+    for (int i = 0; i < reminders.length; i++) {
+      await DBProvider.db.reminderNotToken(reminders[i]);
+    }
+  }
+
+  updateReminders() {
+    const oneDay = const Duration(hours: 1);
+    new Timer.periodic(oneDay, (Timer t) => update());
   }
 
   getsavedImages() async {
@@ -49,6 +70,11 @@ class _MyHomePageState extends State<MyHomePage> {
       birthdate = preferences.getString(userBirthDate);
     } else {
       birthdate = "...";
+    }
+    if (preferences.getString(userEmail) != null) {
+      email = preferences.getString(userEmail);
+    } else {
+      email = "...";
     }
     if (preferences.getString(userBloodType) != null) {
       bloodtype = preferences.getString(userBloodType);
@@ -173,7 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               onTap: () {
-                Navigator.pushNamed(context, '/medicineadd');
+                Navigator.pushNamed(context, '/medicines');
               },
             ),
             SizedBox(

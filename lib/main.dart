@@ -5,6 +5,7 @@ import 'package:finalproject/pages/formpage.dart';
 import 'package:finalproject/pages/homepage.dart';
 import 'package:finalproject/pages/hospitalspage.dart';
 import 'package:finalproject/pages/languagepage.dart';
+import 'package:finalproject/pages/medicinespage.dart';
 import 'package:finalproject/pages/newspage.dart';
 import 'package:finalproject/pages/profileeditpage.dart';
 import 'package:finalproject/pages/profilepage.dart';
@@ -12,6 +13,7 @@ import 'package:finalproject/pages/secondpage.dart';
 import 'package:finalproject/pages/settingspage.dart';
 import 'package:finalproject/pages/unitspage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 AuthService appAuth = new AuthService();
 Widget _defaultHome = MyHomePage(
@@ -33,6 +35,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -53,6 +56,7 @@ class MyApp extends StatelessWidget {
         '/hospitals': (BuildContext context) => HospitalsPage(),
         '/news': (BuildContext context) => NewsPage(),
         '/doctors': (BuildContext context) => DoctorsPage(),
+        '/medicines': (BuildContext context) => MedicinesPage(),
       },
     );
   }

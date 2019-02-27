@@ -1,5 +1,6 @@
 import 'package:finalproject/helpers/app_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 String language;
@@ -72,6 +73,8 @@ class _LanguagePageState extends State<LanguagePage> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark
+        .copyWith(statusBarColor: Colors.deepPurpleAccent.withGreen(1)));
     return Scaffold(
       body: SafeArea(
         child: Container(
