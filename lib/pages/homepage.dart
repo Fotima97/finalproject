@@ -1,11 +1,13 @@
 import 'dart:async';
-
+import 'package:cron/cron.dart';
 import 'package:finalproject/helpers/app_constants.dart';
 import 'package:finalproject/helpers/dbProvider.dart';
 import 'package:finalproject/helpers/reminderModel.dart';
 import 'package:finalproject/pages/languagepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar/flutter_calendar.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 String fullname = "";
@@ -27,16 +29,48 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   double boxHeight = 180.0;
   List<Reminder> reminders = new List<Reminder>();
+  // List<Reminder> notTokenReminders = new List<Reminder>();
+
+  // FlutterLocalNotificationsPlugin flutterLocalNotificationPlugin;
   @override
   void initState() {
+    //getRemindersforNotification();
     checkLanguage();
     _getProfilevalues();
     getsavedImages();
-    updateReminders();
+    // updateReminders();
+    // flutterLocalNotificationPlugin = new FlutterLocalNotificationsPlugin();
+    // var initializationSettingsAndroid =
+    //     new AndroidInitializationSettings('@mipmap/ic_launcher');
+    // var initializationSettingsIOS = new IOSInitializationSettings();
+    // var initializationSettings = new InitializationSettings(
+    //     initializationSettingsAndroid, initializationSettingsIOS);
+
+    // flutterLocalNotificationPlugin.initialize(initializationSettings,
+    //     onSelectNotification: onSelectNotification);
+    var cron = new Cron();
+    cron.schedule(new Schedule.parse('*/3 * * * *'), () async {
+      updateReminders();
+      print('every 3 minutes');
+    });
+    cron.schedule(new Schedule(minutes: 2), () async {
+      print('between every 2minutes');
+    });
     super.initState();
   }
 
-  update() async {
+  // Future onSelectNotification(String payload) async {
+  //   Navigator.pushNamed(context, '/medicines');
+  // }
+
+  // getRemindersforNotification() async {
+  //   await DBProvider.db.getnotTokenReminders().then((result) {
+  //     notTokenReminders = result;
+  //     _showNotifications();
+  //   });
+  // }
+
+  updateReminders() async {
     await DBProvider.db.getRemindersforToday().then((result) {
       reminders = result;
     });
@@ -45,10 +79,10 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  updateReminders() {
-    const oneDay = const Duration(hours: 1);
-    new Timer.periodic(oneDay, (Timer t) => update());
-  }
+  // updateReminders() {
+  //   const oneDay = const Duration(minutes: 5);
+  //   new Timer.periodic(oneDay, (Timer t) => update());
+  // }
 
   getsavedImages() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();

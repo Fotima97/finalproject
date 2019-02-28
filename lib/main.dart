@@ -28,6 +28,7 @@ void main() async {
   } else {
     _defaultHome = LanguagePage();
   }
+
   runApp(MyApp());
 }
 
