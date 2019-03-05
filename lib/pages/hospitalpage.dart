@@ -7,25 +7,11 @@ import 'package:flutter/material.dart';
 
 class HospitalPage extends StatefulWidget {
   _HospitalPageState createState() => new _HospitalPageState();
-  HospitalPage(
-      {Key key,
-      this.title,
-      this.description,
-      this.phonenumber,
-      this.address,
-      this.lang,
-      this.lat,
-      this.imgUrl,
-      this.reviews})
-      : super(key: key);
-  final String title;
-  final String description;
-  final String phonenumber;
-  final String address;
-  final double lang;
-  final double lat;
-  final imgUrl;
-  final List<Review> reviews;
+  HospitalPage({
+    Key key,
+    this.hospital,
+  }) : super(key: key);
+  final HospitalModel hospital;
 }
 
 class _HospitalPageState extends State<HospitalPage> {
@@ -34,7 +20,7 @@ class _HospitalPageState extends State<HospitalPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.title,
+          widget.hospital.title,
           textAlign: TextAlign.center,
           maxLines: 2,
           style: TextStyle(fontSize: 14.0),
@@ -47,10 +33,10 @@ class _HospitalPageState extends State<HospitalPage> {
             height: 200.0,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: widget.imgUrl == ""
-                        ? AssetImage('assets/hospital.jpg')
-                        : NetworkImage(widget.imgUrl),
-                    fit: BoxFit.cover)),
+                    image: NetworkImage(widget.hospital.imgUrl),
+                    fit: BoxFit.cover,
+                    colorFilter:
+                        ColorFilter.mode(Colors.black45, BlendMode.darken))),
           ),
           Container(
             padding: EdgeInsets.only(top: 15.0, right: 10.0, left: 10.0),
@@ -59,7 +45,7 @@ class _HospitalPageState extends State<HospitalPage> {
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 Text(
-                  widget.title,
+                  widget.hospital.title,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
                 ),
@@ -67,7 +53,7 @@ class _HospitalPageState extends State<HospitalPage> {
                   height: 5.0,
                 ),
                 Text(
-                  widget.description,
+                  widget.hospital.description,
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
                 SizedBox(
@@ -88,7 +74,7 @@ class _HospitalPageState extends State<HospitalPage> {
                     Expanded(
                         flex: 3,
                         child: Text(
-                          widget.phonenumber,
+                          widget.hospital.phoneNumber,
                           textAlign: TextAlign.right,
                         ))
                   ],
@@ -109,7 +95,7 @@ class _HospitalPageState extends State<HospitalPage> {
                     Expanded(
                         flex: 3,
                         child: Text(
-                          widget.address,
+                          widget.hospital.address,
                           textAlign: TextAlign.right,
                         ))
                   ],
@@ -129,10 +115,10 @@ class _HospitalPageState extends State<HospitalPage> {
                 ListView.builder(
                   primary: false,
                   shrinkWrap: true,
-                  itemCount: widget.reviews.length,
+                  itemCount: widget.hospital.reviews.length,
                   itemBuilder: (context, index) {
-                    if (widget.reviews.length > 0) {
-                      var review = widget.reviews[index];
+                    if (widget.hospital.reviews.length > 0) {
+                      var review = widget.hospital.reviews[index];
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[

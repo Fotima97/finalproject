@@ -9,6 +9,7 @@ import 'package:flutter_calendar/flutter_calendar.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:connectivity/connectivity.dart';
 
 String fullname = "";
 String birthdate = "";
@@ -16,6 +17,7 @@ String bloodtype = "";
 String allergise = "";
 String email = "";
 List<String> savedImages = [];
+var connectivity;
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -29,25 +31,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   double boxHeight = 180.0;
   List<Reminder> reminders = new List<Reminder>();
-  // List<Reminder> notTokenReminders = new List<Reminder>();
-
-  // FlutterLocalNotificationsPlugin flutterLocalNotificationPlugin;
   @override
   void initState() {
     //getRemindersforNotification();
     checkLanguage();
     _getProfilevalues();
     getsavedImages();
-    // updateReminders();
-    // flutterLocalNotificationPlugin = new FlutterLocalNotificationsPlugin();
-    // var initializationSettingsAndroid =
-    //     new AndroidInitializationSettings('@mipmap/ic_launcher');
-    // var initializationSettingsIOS = new IOSInitializationSettings();
-    // var initializationSettings = new InitializationSettings(
-    //     initializationSettingsAndroid, initializationSettingsIOS);
-
-    // flutterLocalNotificationPlugin.initialize(initializationSettings,
-    //     onSelectNotification: onSelectNotification);
+    checkConnectivity();
     var cron = new Cron();
     cron.schedule(new Schedule.parse('*/3 * * * *'), () async {
       updateReminders();
@@ -59,17 +49,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-  // Future onSelectNotification(String payload) async {
-  //   Navigator.pushNamed(context, '/medicines');
-  // }
-
-  // getRemindersforNotification() async {
-  //   await DBProvider.db.getnotTokenReminders().then((result) {
-  //     notTokenReminders = result;
-  //     _showNotifications();
-  //   });
-  // }
-
   updateReminders() async {
     await DBProvider.db.getRemindersforToday().then((result) {
       reminders = result;
@@ -78,11 +57,6 @@ class _MyHomePageState extends State<MyHomePage> {
       await DBProvider.db.reminderNotToken(reminders[i]);
     }
   }
-
-  // updateReminders() {
-  //   const oneDay = const Duration(minutes: 5);
-  //   new Timer.periodic(oneDay, (Timer t) => update());
-  // }
 
   getsavedImages() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -380,4 +354,8 @@ class _MyHomePageState extends State<MyHomePage> {
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+}
+
+void checkConnectivity() async {
+  connectivity = await (new Connectivity().checkConnectivity());
 }

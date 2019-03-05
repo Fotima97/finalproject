@@ -44,6 +44,8 @@ final edit = "Edit";
 //database
 final medicationTable = "Medications";
 final reminderTable = "Reminders";
+final appointmentTable = "Appointments";
+final imagesTable = "Images";
 final medId = "MedId";
 final medName = "MedName";
 final shape = "Shape";
@@ -58,6 +60,17 @@ final reminderId = "ReminderId";
 final notificationTime = "NotificationTime";
 final token = "Token";
 final notes = "Notes";
+final appointmentId = "AppointmentId";
+final doctorName = "DoctorName";
+final appointmentDate = "AppointmentDate";
+final appointmentTime = "AppointmentTime";
+final specializationField = "Specialization";
+final appointmentPlaceField = "AppointmentPlace";
+final appointmentNotesField = "Notes";
+final alarm = "Alarm";
+final alarmTime = "AlarmTime";
+final appointmentImageId = "AppointmentImageId";
+final imageSrc = "ImageSrc";
 
 //Pills shapes
 final circlepillShape = "assets/circlepill.png";

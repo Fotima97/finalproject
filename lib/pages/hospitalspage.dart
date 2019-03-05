@@ -1,9 +1,16 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:flushbar/flushbar.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:finalproject/helpers/app_constants.dart';
 import 'package:finalproject/helpers/hospitalsmodel.dart';
 import 'package:finalproject/pages/addmedicinepage.dart';
+import 'package:finalproject/pages/homepage.dart';
 import 'package:finalproject/pages/hospitalpage.dart';
 import 'package:finalproject/pages/languagepage.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 class HospitalsPage extends StatefulWidget {
   _HospitalsPageState createState() => new _HospitalsPageState();
@@ -13,119 +20,102 @@ class _HospitalsPageState extends State<HospitalsPage>
     with SingleTickerProviderStateMixin {
   TabController tabController;
   int _selectedTab = 0;
-  List<HospitalModel> hospitals = new List<HospitalModel>();
-  List<Review> reviews = new List<Review>();
+  var dir;
+  var jsonFile;
+  var fileExists;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    checkConnectivity();
     tabController = new TabController(vsync: this, length: 3);
     tabController.addListener(_handleTabSelection);
-    _createList();
-  }
-
-  _createList() {
-    reviews.add(Review(userName: "Sam", review: "Review 1"));
-    reviews.add(Review(userName: "Dan", review: "Review 2"));
-    reviews.add(Review(userName: "Sam", review: "Review 1"));
-    reviews.add(Review(userName: "Dan", review: "Review 2"));
-    hospitals.add(HospitalModel(
-        title: "SHOX INTERNATIONAL HOSPITAL",
-        description:
-            "Частная многопрофильная клиника, рассчитанная на 20 стационарных больных, а также оказания медицинской помощи 120 амбулаторным больным в день. ",
-        phoneNumber: "+998 71 202-02-12",
-        address: "Республика Узбекистан,г. Ташкент, 100015 улица Ойбека, 34.",
-        category: "private",
-        lat: 41.2922589,
-        long: 69.2769942,
-        reviews: reviews,
-        imgUrl: "http://mku.uz/logo/461.jpg"));
-    hospitals.add(HospitalModel(
-        title: "'НУРОНИЙ' СТАЦИОНАР",
-        description: " ",
-        phoneNumber: "+998 71 2915623",
-        address:
-            "Республика Узбекистан,г. Ташкент,Яшнабадский туп. 1-й ОШСКОЙ, 6А",
-        category: "government",
-        lat: 41.2922589,
-        long: 69.2769942,
-        imgUrl: "",
-        reviews: List<Review>()));
-
-    hospitals.add(HospitalModel(
-        title: "SHOX INTERNATIONAL HOSPITAL",
-        description:
-            "Частная многопрофильная клиника, рассчитанная на 20 стационарных больных, а также оказания медицинской помощи 120 амбулаторным больным в день. ",
-        phoneNumber: "+998 71 202-02-12",
-        address: "Республика Узбекистан,г. Ташкент, 100015 улица Ойбека, 34.",
-        category: "private",
-        lat: 41.2922589,
-        long: 69.2769942,
-        reviews: reviews,
-        imgUrl: "http://mku.uz/logo/461.jpg"));
-    hospitals.add(HospitalModel(
-        title: "'НУРОНИЙ' СТАЦИОНАР",
-        description: " ",
-        phoneNumber: "+998 71 2915623",
-        address:
-            "Республика Узбекистан,г. Ташкент,Яшнабадский туп. 1-й ОШСКОЙ, 6А",
-        category: "government",
-        imgUrl: "",
-        lat: 41.2922589,
-        long: 69.2769942,
-        reviews: List<Review>()));
-
-    hospitals.add(HospitalModel(
-        title: "SHOX INTERNATIONAL HOSPITAL",
-        description:
-            "Частная многопрофильная клиника, рассчитанная на 20 стационарных больных, а также оказания медицинской помощи 120 амбулаторным больным в день. ",
-        phoneNumber: "+998 71 202-02-12",
-        address: "Республика Узбекистан,г. Ташкент, 100015 улица Ойбека, 34.",
-        category: "private",
-        lat: 41.2922589,
-        long: 69.2769942,
-        reviews: reviews,
-        imgUrl: "http://mku.uz/logo/461.jpg"));
-    hospitals.add(HospitalModel(
-        title: "'НУРОНИЙ' СТАЦИОНАР",
-        description: " ",
-        imgUrl: "",
-        phoneNumber: "+998 71 2915623",
-        address:
-            "Республика Узбекистан,г. Ташкент,Яшнабадский туп. 1-й ОШСКОЙ, 6А",
-        category: "government",
-        lat: 41.2922589,
-        long: 69.2769942,
-        reviews: List<Review>()));
-
-    hospitals.add(HospitalModel(
-        title: "SHOX INTERNATIONAL HOSPITAL",
-        description:
-            "Частная многопрофильная клиника, рассчитанная на 20 стационарных больных, а также оказания медицинской помощи 120 амбулаторным больным в день. ",
-        phoneNumber: "+998 71 202-02-12",
-        address: "Республика Узбекистан,г. Ташкент, 100015 улица Ойбека, 34.",
-        category: "private",
-        lat: 41.2922589,
-        long: 69.2769942,
-        imgUrl: "",
-        reviews: reviews));
-    hospitals.add(HospitalModel(
-        title: "'НУРОНИЙ' СТАЦИОНАР",
-        description: " ",
-        phoneNumber: "+998 71 2915623",
-        address:
-            "Республика Узбекистан,г. Ташкент,Яшнабадский туп. 1-й ОШСКОЙ, 6А",
-        category: "government",
-        lat: 41.2922589,
-        long: 69.2769942,
-        reviews: List<Review>(),
-        imgUrl: "http://mku.uz/logo/461.jpg"));
   }
 
   void _handleTabSelection() {
     setState(() {
       _selectedTab = tabController.index;
     });
+  }
+
+  Future<List<HospitalModel>> _getHospitalsJsonFromPhoneStorage() async {
+    var _hospitalJson;
+
+    Directory directory = await getApplicationDocumentsDirectory();
+    dir = directory;
+    String path = language == eng
+        ? "/hospitalsen.json"
+        : language == rus ? "/hospitalsenru.json" : "/hospitalsenuz.json";
+    jsonFile = new File(dir.path + path);
+    fileExists = jsonFile.existsSync();
+
+    if (fileExists) {
+      _hospitalJson = jsonFile.readAsStringSync();
+      return parseHospitals(_hospitalJson);
+    } else {
+      Flushbar()
+        ..title = "Проблемы с сервером"
+        ..message = "Проверьте подключение к сети"
+        ..duration = Duration(seconds: 1)
+        ..icon = Icon(
+          Icons.info,
+          color: Colors.white,
+        )
+        ..backgroundColor = Colors.red
+        ..show(context);
+      return null;
+    }
+  }
+
+  void _saveJsonToFileSystem(String fileName, String content) {
+    getApplicationDocumentsDirectory().then((Directory directory) {
+      dir = directory;
+      String path = language == eng
+          ? "/hospitalsen"
+          : language == rus ? "/hospitalsenru" : "/hospitalsenuz";
+      jsonFile = new File(dir.path + path + fileName);
+      fileExists = jsonFile.existsSync();
+      jsonFile.writeAsStringSync(content);
+    });
+  }
+
+  List<HospitalModel> parseHospitals(String responseBody) {
+    final parsed = json.decode(responseBody);
+    var jsonData;
+    jsonData = (parsed).cast<Map<String, dynamic>>();
+
+    return jsonData
+        .map<HospitalModel>((json) => HospitalModel.fromJson(json))
+        .toList();
+  }
+
+  Future<List<HospitalModel>> fetchHospitals() async {
+    var client = http.Client();
+    if (connectivity == ConnectivityResult.mobile ||
+        connectivity == ConnectivityResult.wifi) {
+      final response = await client.get(language == eng
+          ? 'http://medassistant-001-site1.itempurl.com/api/hospitalapieng'
+          : language == rus
+              ? 'http://medassistant-001-site1.itempurl.com/api/hospitalapiru'
+              : 'http://medassistant-001-site1.itempurl.com/api/hospitalapiuz');
+
+      if (response.statusCode == 200) {
+        String body = utf8.decode(response.bodyBytes);
+        if (language == eng) {
+          _saveJsonToFileSystem('hospitalsen.json', body);
+        } else if (language == rus) {
+          _saveJsonToFileSystem('hospitalsru.json', body);
+        } else {
+          _saveJsonToFileSystem('hospitalsuz.json', body);
+        }
+        return parseHospitals(body);
+      } else {
+        return _getHospitalsJsonFromPhoneStorage();
+      }
+    } else {
+      return _getHospitalsJsonFromPhoneStorage();
+    }
   }
 
   @override
@@ -142,14 +132,7 @@ class _HospitalsPageState extends State<HospitalsPage>
               context,
               MaterialPageRoute(
                   builder: (context) => HospitalPage(
-                        title: hospital.title,
-                        description: hospital.description,
-                        phonenumber: hospital.phoneNumber,
-                        address: hospital.address,
-                        lang: hospital.long,
-                        lat: hospital.lat,
-                        reviews: reviewslist,
-                        imgUrl: hospital.imgUrl,
+                        hospital: hospital,
                       )));
         },
         child: Column(
@@ -186,16 +169,16 @@ class _HospitalsPageState extends State<HospitalsPage>
     );
   }
 
-  Widget createTabContent(String category) {
+  Widget createTabContent(int categoryId, List<HospitalModel> hospitals) {
     return ListView.builder(
       padding: EdgeInsets.only(left: 0.0, right: 0.0, top: 20.0),
       itemCount: hospitals.length,
       itemBuilder: (context, index) {
         var hospital = hospitals[index];
         var reviewslist = hospitals[index].reviews;
-        if (hospital.category == category) {
+        if (hospital.categoryId == categoryId) {
           return createHospitalRow(hospital, reviewslist);
-        } else if (category == "all") {
+        } else if (categoryId == 3) {
           return createHospitalRow(hospital, reviewslist);
         } else {
           return Container();
@@ -242,14 +225,43 @@ class _HospitalsPageState extends State<HospitalsPage>
         ),
       ),
       body: SafeArea(
-          child: TabBarView(
-        controller: tabController,
-        children: <Widget>[
-          createTabContent("all"),
-          createTabContent("government"),
-          createTabContent("private"),
-        ],
-      )),
+          child: FutureBuilder<List<HospitalModel>>(
+        future: fetchHospitals(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<HospitalModel> hospitals = snapshot.data;
+            return TabBarView(
+              controller: tabController,
+              children: <Widget>[
+                createTabContent(3, hospitals),
+                createTabContent(1, hospitals),
+                createTabContent(2, hospitals),
+              ],
+            );
+
+            //  ListView.builder(
+            //   itemCount: snapshot.data.length,
+            //   itemBuilder: (context, index) {
+            //     var hospital = snapshot.data[index];
+            //     return ListTile(
+            //       title: Text(hospital.title),
+            //     );
+            //   },
+            // );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      )
+          //     TabBarView(
+          //   controller: tabController,
+          //   children: <Widget>[
+          //     createTabContent("all"),
+          //     createTabContent("government"),
+          //     createTabContent("private"),
+          //   ],
+          // )
+          ),
     );
   }
 }

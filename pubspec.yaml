@@ -27,11 +27,15 @@ dependencies:
   flutter_svg: ^0.10.2
   transparent_image: ^0.1.0
   path_provider: ^0.5.0+1
-  flushbar: ^1.2.1
   sqflite: ^1.1.1
   flutter_datetime_picker: ^1.1.3
   flutter_local_notifications: ^0.5.2
   cron: ^0.2.1
+  photo_view: ^0.2.1
+  http: ^0.12.0+1
+  connectivity: ^0.4.2
+  flushbar: ^1.2.3
+  google_maps_flutter: ^0.3.0+2
 
 
 
@@ -85,6 +89,11 @@ flutter:
   - assets/streamline.png
   - assets/paste.png
   - assets/circlepill.png
+  - assets/doctorIcon.png
+  - assets/hospitalIcon.png
+  - assets/specialization.png
+  - assets/specializationIcon.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
 

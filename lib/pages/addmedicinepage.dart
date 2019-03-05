@@ -69,6 +69,10 @@ class _AddMedicineState extends State<AddMedicine> {
     return DateFormat("HH:mm").format(time);
   }
 
+  String formDate(DateTime date) {
+    return DateFormat('yyyy-MM-dd').format(date);
+  }
+
   void _showTimeKeeper(BuildContext context, int id) {
     DatePicker.showTimePicker(context,
         showTitleActions: true, currentTime: DateTime.now(), onConfirm: (time) {
@@ -259,16 +263,16 @@ class _AddMedicineState extends State<AddMedicine> {
           notifictionTime.add(alarmTime);
           break;
         case 1:
-         notifictionTime.add(alarmTime);
+          notifictionTime.add(alarmTime);
           notifictionTime.add(alarmTime1);
           break;
         case 2:
-         notifictionTime.add(alarmTime);
+          notifictionTime.add(alarmTime);
           notifictionTime.add(alarmTime1);
           notifictionTime.add(alarmTime2);
           break;
         case 3:
-           notifictionTime.add(alarmTime);
+          notifictionTime.add(alarmTime);
           notifictionTime.add(alarmTime1);
           notifictionTime.add(alarmTime2);
           notifictionTime.add(alarmTime3);
@@ -545,11 +549,7 @@ class _AddMedicineState extends State<AddMedicine> {
                                   children: <Widget>[
                                     Icon(Icons.today),
                                     Text(
-                                      startDate.day.toString() +
-                                          "-" +
-                                          startDate.month.toString() +
-                                          "-" +
-                                          startDate.year.toString(),
+                                      formDate(startDate),
                                       style: TextStyle(fontSize: 12.0),
                                     ),
                                   ],
@@ -584,11 +584,7 @@ class _AddMedicineState extends State<AddMedicine> {
                                   children: <Widget>[
                                     Icon(Icons.today),
                                     Text(
-                                      endDate.day.toString() +
-                                          "-" +
-                                          endDate.month.toString() +
-                                          "-" +
-                                          endDate.year.toString(),
+                                      formDate(endDate),
                                       style: TextStyle(fontSize: 12.0),
                                     ),
                                   ],
@@ -693,7 +689,7 @@ class _AddMedicineState extends State<AddMedicine> {
           ),
         ),
         onTap: () async {
-                addNotifications(_radioValue);
+          addNotifications(_radioValue);
 
           if (widget.action == edit) {
             await DBProvider.db.updateMedication(new Medication(
@@ -704,8 +700,8 @@ class _AddMedicineState extends State<AddMedicine> {
                 dose: int.parse(_doseController.text),
                 units: "$dose",
                 times: _radioValue + 1,
-                startDate: DateFormat('yyyy-MM-dd').format(startDate),
-                endDate: DateFormat('yyyy-MM-dd').format(endDate),
+                startDate: formDate(startDate),
+                endDate: formDate(endDate),
                 duration: duration,
                 notes: notes.text));
             await DBProvider.db
@@ -729,8 +725,8 @@ class _AddMedicineState extends State<AddMedicine> {
                 dose: int.parse(_doseController.text),
                 units: "$dose",
                 times: _radioValue + 1,
-                startDate: DateFormat('yyyy-MM-dd').format(startDate),
-                endDate: DateFormat('yyyy-MM-dd').format(endDate),
+                startDate: formDate(startDate),
+                endDate: formDate(endDate),
                 duration: duration,
                 notes: notes.text));
 

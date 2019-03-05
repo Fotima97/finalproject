@@ -1,6 +1,7 @@
 import 'package:finalproject/helpers/app_constants.dart';
 import 'package:finalproject/pages/languagepage.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -117,6 +118,10 @@ class _FormPageState extends State<FormPage> {
     preferences.setBool(loginState, value);
   }
 
+  String formDate(DateTime date) {
+    return DateFormat('yyyy-MM-dd').format(date);
+  }
+
   void _showDatePicker(BuildContext context) {
     showModalBottomSheet(
         context: context,
@@ -124,11 +129,7 @@ class _FormPageState extends State<FormPage> {
           return CupertinoDatePicker(
             onDateTimeChanged: (DateTime value) {
               setState(() {
-                _birthdateController.text = value.day.toString() +
-                    "-" +
-                    value.month.toString() +
-                    "-" +
-                    value.year.toString();
+                _birthdateController.text = formDate(value);
               });
             },
             initialDateTime: DateTime.now(),
@@ -341,7 +342,7 @@ class _FormPageState extends State<FormPage> {
                         controller: _allergiesController,
                         autofocus: true,
                         keyboardType: TextInputType.multiline,
-                        maxLines: 5,
+                        maxLines: 3,
                         decoration: InputDecoration(
                             filled: true,
                             fillColor: Color(0xFFE2E4FB),

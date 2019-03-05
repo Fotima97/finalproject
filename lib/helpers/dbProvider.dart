@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:finalproject/helpers/app_constants.dart';
+import 'package:finalproject/helpers/appointmentImageModel.dart';
+import 'package:finalproject/helpers/appointmentModel.dart';
 import 'package:finalproject/helpers/medicationModel.dart';
 import 'package:finalproject/helpers/reminderModel.dart';
 import 'package:path/path.dart';
@@ -35,12 +37,33 @@ class DBProvider {
         'CREATE TABLE $medicationTable ($medId INTEGER PRIMARY KEY AUTOINCREMENT, $medName TEXT, $shape TEXT, $color INTEGER, $dosedb  INTEGER, $units TEXT, $times INTEGER, $startDate TEXT, $endDate TEXT, $duration INTEGER, $notes TEXT)');
     await db.execute(
         'CREATE TABLE $reminderTable ($reminderId INTEGER PRIMARY KEY AUTOINCREMENT, $medId INTEGER, $notificationTime TEXT, $token BIT,Constraint fk_medId FOREIGN KEY($medId) REFERENCES $medicationTable($medId))');
+    await db.execute(
+        'CREATE TABLE $appointmentTable ($appointmentId INTEGER PRIMARY KEY AUTOINCREMENT, $doctorName TEXT, $appointmentDate TEXT, $appointmentTime TEXT,$appointmentPlaceField TEXT, $specializationField  TEXT, $appointmentNotesField TEXT, $alarm BIT, $alarmTime TEXT)');
+    await db.execute(
+        'CREATE TABLE $imagesTable ($appointmentImageId INTEGER PRIMARY KEY AUTOINCREMENT, $appointmentId INTEGER, $imageSrc TEXT,Constraint fk_appointmentId FOREIGN KEY($appointmentId) REFERENCES $appointmentTable($appointmentId))');
   }
 
   addMedication(Medication newMed) async {
     final db = await database;
     var res = await db.rawInsert(
         'INSERT Into $medicationTable ($medName,$shape,$color,$dosedb, $units, $times, $startDate, $endDate,$duration, $notes) VALUES ("${newMed.medName}", "${newMed.shape}", ${newMed.color},${newMed.dose},"${newMed.units}",${newMed.times},"${newMed.startDate}","${newMed.endDate}",${newMed.duration}, "${newMed.notes}")');
+    return res;
+  }
+
+  addAppointment(Appointment newAppoinment) async {
+    final db = await database;
+    int alarmresult = newAppoinment.alarm ? 1 : 0;
+
+    var res = await db.rawInsert(
+        'INSERT Into $appointmentTable ($doctorName,$appointmentDate,$appointmentTime,$appointmentPlaceField, $specializationField, $appointmentNotesField, $alarm, $alarmTime) VALUES ("${newAppoinment.doctorName}", "${newAppoinment.appointmentDate}", "${newAppoinment.appointmentTime}","${newAppoinment.appointmentPlace}","${newAppoinment.specialization}","${newAppoinment.appointmentNotes}",$alarmresult,"${newAppoinment.alarmTime}")');
+    return res;
+  }
+
+  addImage(Images newImage) async {
+    final db = await database;
+    var res = await db.rawInsert(
+        'INSERT Into $imagesTable( $appointmentId, $imageSrc) VALUES (${newImage.appointmentId}, "${newImage.imageSrc}")');
+
     return res;
   }
 
@@ -53,11 +76,35 @@ class DBProvider {
     return res;
   }
 
+  getAppointmentById(int id) async {
+    final db = await database;
+    var res = await db.query("$appointmentTable",
+        where: "$appointmentId = ?", whereArgs: [id]);
+    return res.isNotEmpty ? Appointment.fromJson(res.first) : Null;
+  }
+
   getMedicationById(int id) async {
     final db = await database;
     var res = await db
         .query("$medicationTable", where: "$medId = ?", whereArgs: [id]);
     return res.isNotEmpty ? Medication.fromJson(res.first) : Null;
+  }
+
+  Future<List<Appointment>> getAllAppointments() async {
+    final db = await database;
+    var res = await db.query("$appointmentTable");
+    List<Appointment> list =
+        res.isNotEmpty ? res.map((c) => Appointment.fromJson(c)).toList() : [];
+    return list;
+  }
+
+  Future<List<Images>> getImagesByappointment(int id) async {
+    final db = await database;
+    var res = await db
+        .rawQuery("SELECT * FROM $imagesTable WHERE $appointmentId=$id");
+    List<Images> list =
+        res.isNotEmpty ? res.map((c) => Images.fromJson(c)).toList() : [];
+    return list;
   }
 
   Future<List<Reminder>> getRemindersById(int id) async {
@@ -112,12 +159,35 @@ class DBProvider {
     return list;
   }
 
+  Future<int> getLastAppointmentId() async {
+    final db = await database;
+    var table = await db.rawQuery(
+        "SELECT MAX($appointmentId) as $appointmentId FROM $appointmentTable");
+    int id = table.first["$appointmentId"];
+    return id;
+  }
+
   Future<int> getLastMedicationId() async {
     final db = await database;
     var table =
         await db.rawQuery("SELECT MAX($medId) as $medId FROM $medicationTable");
     int id = table.first["$medId"];
     return id;
+  }
+
+  updateAppointment(Appointment newAppointment) async {
+    final db = await database;
+    var res = await db.update("$appointmentTable", newAppointment.toJson(),
+        where: "$appointmentId = ?", whereArgs: [newAppointment.appointmentId]);
+    return res;
+  }
+
+  updateImageList(Images newImage) async {
+    final db = await database;
+    var res = await db.update("$imagesTable", newImage.toJson(),
+        where: "$appointmentImageId = ?",
+        whereArgs: [newImage.appointmentImageId]);
+    return res;
   }
 
   updateMedication(Medication newMedication) async {
@@ -161,6 +231,18 @@ class DBProvider {
   deleteMedication(int id) async {
     final db = await database;
     db.delete("$medicationTable", where: "$medId = ?", whereArgs: [id]);
+  }
+
+  deleteAppointment(int id) async {
+    final db = await database;
+    db.delete("$appointmentTable",
+        where: "$appointmentId = ?", whereArgs: [id]);
+  }
+
+  deleteImage(int id) async {
+    final db = await database;
+    db.delete("$imagesTable",
+        where: "$appointmentImageId = ?", whereArgs: [id]);
   }
 
   deleteReminder(int id) async {
