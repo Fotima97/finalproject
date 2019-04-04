@@ -26,7 +26,7 @@ final userBirthDate = 'birthdate';
 final userBloodType = 'bloodType';
 final userAllergies = "allergies";
 final userEmail = "email";
-
+final onlineSaved = "OnlineSaved";
 final appName = "Final Project";
 final i1 = "i+";
 final i2 = "i-";
@@ -46,6 +46,7 @@ final medicationTable = "Medications";
 final reminderTable = "Reminders";
 final appointmentTable = "Appointments";
 final imagesTable = "Images";
+final usersTable = "Users";
 final medId = "MedId";
 final medName = "MedName";
 final shape = "Shape";
@@ -71,6 +72,11 @@ final alarm = "Alarm";
 final alarmTime = "AlarmTime";
 final appointmentImageId = "AppointmentImageId";
 final imageSrc = "ImageSrc";
+final fullName = "FullName";
+final birthdatefield = "BirthDate";
+final emailfield = "Email";
+final bloodType = "BloodType";
+final allergies = "Allergies";
 
 //Pills shapes
 final circlepillShape = "assets/circlepill.png";

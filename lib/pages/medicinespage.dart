@@ -2,6 +2,7 @@ import 'package:finalproject/helpers/app_constants.dart';
 import 'package:finalproject/helpers/dbProvider.dart';
 import 'package:finalproject/helpers/medicationModel.dart';
 import 'package:finalproject/helpers/reminderModel.dart';
+import 'package:finalproject/pages/addmedicinepage.dart';
 import 'package:finalproject/pages/languagepage.dart';
 import 'package:finalproject/pages/pillslist.dart';
 import 'package:finalproject/pages/todayspills.dart';
@@ -45,7 +46,11 @@ class _MedicinesPageState extends State<MedicinesPage> {
         onSelectNotification: onSelectNotification);
 
     getData();
-    _currentIndex = 0;
+    if (newMedication) {
+      _currentIndex = 1;
+    } else {
+      _currentIndex = 0;
+    }
   }
 
   Future onSelectNotification(String payload) async {

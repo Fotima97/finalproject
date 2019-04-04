@@ -292,13 +292,14 @@ class _AddAppointmentState extends State<AddAppointment> {
                 child: TextField(
                   decoration: InputDecoration(
                       suffixIcon: Container(
-                        padding: EdgeInsets.all(11.0),
-                        child: Image.asset(
-                          'assets/hospitalIcon.png',
-                          height: .2,
-                          color: Colors.grey,
-                        ),
-                      ),
+                          padding: EdgeInsets.all(11.0),
+                          child: Icon(Icons.location_on, color: Colors.grey)
+                          // Image.asset(
+                          //   'assets/hospitalIcon.png',
+                          //   height: .2,
+                          //   color: Colors.grey,
+                          // ),
+                          ),
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -367,7 +368,7 @@ class _AddAppointmentState extends State<AddAppointment> {
               ],
             ),
             SizedBox(
-              height: 15.0,
+              height: 20.0,
             ),
             notificationTimePicker(
                 _alarm, context, _notificationController, notificationTime),

@@ -1,13 +1,18 @@
 import 'dart:io';
 import 'package:finalproject/helpers/app_constants.dart';
+import 'package:finalproject/helpers/usermodel.dart';
 import 'package:finalproject/pages/homepage.dart';
 import 'package:finalproject/pages/languagepage.dart';
+import 'package:finalproject/pages/profileeditpage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
+  ProfilePage({Key key, this.user}) : super(key: key);
+
+  final User user;
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -15,9 +20,17 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   String convertedbloodtype = " ";
   File image;
+  User userData;
+
   @override
   void initState() {
+    if (update) {
+      userData = updateUser;
+    } else {
+      userData = widget.user;
+    }
     _convertbloodtype();
+
     super.initState();
   }
 
@@ -122,6 +135,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   _convertbloodtype() {
+    String bloodtype = userData.bloodType;
     if (bloodtype == i1) {
       convertedbloodtype = language == eng
           ? "I-positive"
@@ -177,7 +191,10 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Icon(Icons.edit),
         backgroundColor: accentColor,
         onPressed: () {
-          Navigator.pushNamed(context, '/profileedit');
+          MaterialPageRoute(
+              builder: (context) => ProfileEditPage(
+                    user: userData,
+                  ));
         },
       ),
       body: SafeArea(
@@ -193,7 +210,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   : language == rus ? "Полное имя" : "To'liq ismi",
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
             ),
-            subtitle: Text(fullname),
+            subtitle: Text(userData.fullName),
           ),
           Divider(),
           ListTile(
@@ -204,7 +221,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   : language == rus ? "День рождение" : "Tug'ilgan kun",
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
             ),
-            subtitle: Text(birthdate),
+            subtitle: Text(userData.birthDate),
           ),
           Divider(),
           ListTile(
@@ -215,7 +232,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   : language == rus ? "Эл.адрес" : "Elektron pochta",
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
             ),
-            subtitle: Text(email),
+            subtitle: Text(userData.email),
           ),
           Divider(),
           ListTile(
@@ -247,7 +264,7 @@ class _ProfilePageState extends State<ProfilePage> {
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
             ),
             subtitle: Text(
-              allergise,
+              userData.allergies,
               softWrap: true,
               overflow: TextOverflow.clip,
             ),

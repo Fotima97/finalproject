@@ -1,11 +1,25 @@
+import 'dart:convert';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:finalproject/helpers/app_constants.dart';
+import 'package:finalproject/helpers/dbProvider.dart';
+import 'package:finalproject/helpers/usermodel.dart';
 import 'package:finalproject/pages/homepage.dart';
 import 'package:finalproject/pages/languagepage.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+
+User updateUser;
+bool update = false;
 
 class ProfileEditPage extends StatefulWidget {
+  ProfileEditPage({Key key, this.user}) : super(key: key);
+
+  final User user;
   @override
   _ProfileEditPageState createState() => _ProfileEditPageState();
 }
@@ -15,37 +29,19 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   TextEditingController _birthdate = new TextEditingController();
   TextEditingController _allergies = new TextEditingController();
   TextEditingController _email = new TextEditingController();
-
   List<DropdownMenuItem<String>> _dropdDownMenuItems;
   final GlobalKey<FormState> _formkey = new GlobalKey<FormState>();
-
+  bool _checkboxValue = false;
   String _bloodtype;
   _getProfilevalues() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    if (preferences.getString(userFullName) != null) {
-      _fullname.text = preferences.getString(userFullName);
-      fullname = preferences.getString(userFullName);
-    } else {
-      _fullname.text = "";
-    }
-    if (preferences.getString(userBirthDate) != null) {
-      _birthdate.text = preferences.getString(userBirthDate);
-      birthdate = preferences.getString(userBirthDate);
-    } else {
-      _birthdate.text = "";
-    }
-    if (preferences.getString(userBloodType) != null) {
-      _bloodtype = preferences.getString(userBloodType);
-      bloodtype = preferences.getString(userBloodType);
-    } else {
-      _bloodtype = _dropdDownMenuItems[0].value;
-    }
-    if (preferences.getString(userAllergies) != null) {
-      _allergies.text = preferences.getString(userAllergies);
-      allergise = preferences.getString(userAllergies);
-    } else {
-      _allergies.text = "";
-    }
+    _fullname.text = widget.user.fullName;
+    _birthdate.text = widget.user.birthDate;
+    _allergies.text = widget.user.allergies;
+    _email.text = widget.user.email;
+  }
+
+  String formDate(DateTime date) {
+    return DateFormat('yyyy-MM-dd').format(date);
   }
 
   List<DropdownMenuItem<String>> _getmenuitems() {
@@ -118,14 +114,53 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     return items;
   }
 
-  _saveUserData(String fullname, String birthdate, String bloodtype,
-      String allergies, String email) async {
+  _saveUserData(User user) async {
+    var userEncode = jsonEncode({
+      "FullName": user.fullName,
+      "Birthdate": user.birthDate,
+      "Email": user.email,
+      "BloodType": user.bloodType,
+      "Allergies": user.allergies
+    });
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString(userFullName, fullname);
-    preferences.setString(userBirthDate, birthdate);
-    preferences.setString(userBloodType, bloodtype);
-    preferences.setString(userAllergies, allergies);
-    preferences.setString(userEmail, email);
+    preferences.setString(userFullName, user.fullName);
+    updateUser = user;
+    await DBProvider.db.updateUser(updateUser);
+    if (_checkboxValue) {
+      if (connectivity == ConnectivityResult.mobile ||
+          connectivity == ConnectivityResult.wifi) {
+        final responce = await http.put(
+            "http://medicalassistant-001-site1.dtempurl.com/api/userapi/post",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+            body: userEncode);
+        print(responce.body);
+        if (responce.statusCode == 200) {
+          preferences.setBool(onlineSaved, true);
+        }
+      } else {
+        Flushbar()
+          ..title = language == eng
+              ? "Problems with connection"
+              : language == rus
+                  ? "Проблемы с подключение"
+                  : "Ulanish bilan bog'liq muammolar"
+          ..message = language == eng
+              ? "Data is not uploaded to database"
+              : language == rus
+                  ? "Данные не загружены в базу данных "
+                  : "Ma'lumotlar bazaga yuklanmadi"
+          ..duration = Duration(seconds: 1)
+          ..icon = Icon(
+            Icons.info,
+            color: Colors.white,
+          )
+          ..backgroundColor = Colors.red
+          ..show(context);
+      }
+    }
   }
 
   void _showDatePicker(BuildContext context) {
@@ -135,11 +170,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
           return CupertinoDatePicker(
             onDateTimeChanged: (DateTime value) {
               setState(() {
-                _birthdate.text = value.day.toString() +
-                    "-" +
-                    value.month.toString() +
-                    "-" +
-                    value.year.toString();
+                _birthdate.text = formDate(value);
               });
             },
             initialDateTime: DateTime.now(),
@@ -153,6 +184,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   @override
   void initState() {
     _getProfilevalues();
+    checkConnectivity();
     _dropdDownMenuItems = _getmenuitems();
     _bloodtype = _dropdDownMenuItems[0].value;
 
@@ -271,6 +303,24 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 ),
               ),
               SizedBox(height: 40.0),
+              ListTile(
+                title: Text(language == eng
+                    ? "Add to database"
+                    : language == rus
+                        ? "Добавить в базу данных"
+                        : "Ma'lumotlar bazasiga qo'shish"),
+                trailing: Checkbox(
+                  value: _checkboxValue,
+                  onChanged: (value) {
+                    setState(() {
+                      _checkboxValue = value;
+                    });
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
               Container(
                 alignment: Alignment.centerRight,
                 padding: EdgeInsets.only(left: 40.0),
@@ -295,12 +345,18 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                       ),
                       onPressed: () {
                         if (_formkey.currentState.validate()) {
-                          _saveUserData(_fullname.text, _birthdate.text,
-                              _bloodtype, _allergies.text, _email.text);
-                          _getProfilevalues();
-                          Navigator.of(context)
-                              .pushReplacementNamed("/profile");
-                          Navigator.of(context).pop();
+                          User user = new User(
+                              fullName: _fullname.text,
+                              birthDate: _birthdate.text,
+                              bloodType: _bloodtype,
+                              allergies: _allergies.text,
+                              email: _email.text);
+                          _saveUserData(user);
+                          //  _getProfilevalues();
+                          // Navigator.of(context)
+                          //     .pushReplacementNamed("/profile");
+                          update = true;
+                          Navigator.pop(context);
                         }
                       },
                     ),

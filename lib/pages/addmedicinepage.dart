@@ -3,6 +3,7 @@ import 'package:finalproject/helpers/dbProvider.dart';
 import 'package:finalproject/helpers/medicationModel.dart';
 import 'package:finalproject/helpers/reminderModel.dart';
 import 'package:finalproject/pages/languagepage.dart';
+import 'package:finalproject/pages/medicinespage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 String dose = "";
+bool newMedication = false;
 
 class AddMedicine extends StatefulWidget {
   AddMedicine({Key key, this.action, this.medication, this.reminders})
@@ -210,40 +212,43 @@ class _AddMedicineState extends State<AddMedicine> {
       for (int i = 0; i < number; i++) {
         Widget widget = Column(
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Text(language == eng
-                    ? "Alarm time"
-                    : language == rus ? "Время будильника" : "Signal vaqti"),
-                InkWell(
-                  child: Container(
-                      padding: EdgeInsets.all(5.0),
-                      width: 150.0,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(3.0),
-                          border: Border.all(color: Colors.grey)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Icon(Icons.timer),
-                          Text(
-                            i == 0
-                                ? alarmTime
-                                : i == 1
-                                    ? alarmTime1
-                                    : i == 2
-                                        ? alarmTime2
-                                        : i == 3 ? alarmTime3 : alarmTime,
-                            style: TextStyle(fontSize: 12.0),
-                          ),
-                        ],
-                      )),
-                  onTap: () {
-                    _showTimeKeeper(context, i);
-                  },
-                )
-              ],
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(language == eng
+                      ? "Alarm time"
+                      : language == rus ? "Время будильника" : "Signal vaqti"),
+                  InkWell(
+                    child: Container(
+                        padding: EdgeInsets.all(5.0),
+                        width: 150.0,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(3.0),
+                            border: Border.all(color: Colors.grey)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Icon(Icons.timer),
+                            Text(
+                              i == 0
+                                  ? alarmTime
+                                  : i == 1
+                                      ? alarmTime1
+                                      : i == 2
+                                          ? alarmTime2
+                                          : i == 3 ? alarmTime3 : alarmTime,
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                          ],
+                        )),
+                    onTap: () {
+                      _showTimeKeeper(context, i);
+                    },
+                  )
+                ],
+              ),
             ),
             SizedBox(
               height: 10.0,
@@ -529,7 +534,7 @@ class _AddMedicineState extends State<AddMedicine> {
                   child: Column(
                     children: <Widget>[
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(language == eng
                               ? "Start Date"
@@ -564,7 +569,7 @@ class _AddMedicineState extends State<AddMedicine> {
                         height: 10.0,
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(language == eng
                               ? "End Date"
@@ -597,7 +602,7 @@ class _AddMedicineState extends State<AddMedicine> {
                       ),
                       SizedBox(height: 10.0),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(language == eng
                               ? "Duration"
@@ -627,7 +632,7 @@ class _AddMedicineState extends State<AddMedicine> {
                         height: 10.0,
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
                             language == eng
@@ -657,11 +662,14 @@ class _AddMedicineState extends State<AddMedicine> {
                 SizedBox(
                   height: 10.0,
                 ),
-                Text(
-                  language == eng
-                      ? 'Notes'
-                      : language == rus ? "Заметки" : "Izohlar",
-                  style: TextStyle(color: Colors.grey, fontSize: 16.0),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    language == eng
+                        ? 'Notes'
+                        : language == rus ? "Заметки" : "Izohlar",
+                    style: TextStyle(color: Colors.grey, fontSize: 16.0),
+                  ),
                 ),
                 TextField(
                   controller: notes,
@@ -738,6 +746,8 @@ class _AddMedicineState extends State<AddMedicine> {
                   token: false));
             }
           }
+          newMedication = true;
+
           Navigator.popUntil(context, (route) {
             return route.settings.name == "/medicines";
           });

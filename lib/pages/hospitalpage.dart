@@ -1,9 +1,14 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
+
 import 'package:finalproject/helpers/app_constants.dart';
 import 'package:finalproject/helpers/hospitalsmodel.dart';
 import 'package:finalproject/pages/addmedicinepage.dart';
 import 'package:finalproject/pages/languagepage.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:flutter/material.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class HospitalPage extends StatefulWidget {
   _HospitalPageState createState() => new _HospitalPageState();
@@ -15,6 +20,59 @@ class HospitalPage extends StatefulWidget {
 }
 
 class _HospitalPageState extends State<HospitalPage> {
+  TextEditingController _feedbackController = new TextEditingController();
+  bool addReview = false;
+
+  // Future<http.Response> createReview() async {
+  //   final response = await http.post(
+  //       'http://medassistant-001-site1.itempurl.com/api/comment/createComment',
+  //       // headers: {
+  //       //   HttpHeaders.contentTypeHeader: 'application/json'
+  //       // },
+  //       body: );
+  //   return response;
+  // }
+
+  test() async {
+    final msg = jsonEncode({
+      "HospitalId": 2,
+      "UserName": "Fotima Khayrullaeva",
+      "Comment1": "Test!"
+    });
+
+    final responce = await http.post(
+        "http://medicalassistant-001-site1.dtempurl.com/api/reviewapi/post",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: msg);
+    print(responce.body);
+    print("response code" + responce.statusCode.toString());
+  }
+
+  Widget createTextbox() {
+    if (addReview) {
+      return Container(
+          padding: EdgeInsets.only(top: 10.0),
+          margin: EdgeInsets.only(bottom: 25.0),
+          child: TextField(
+            keyboardType: TextInputType.multiline,
+            // maxLines: 3,
+            autofocus: true,
+            decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white12,
+                //border: OutlineInputBorder(borderSide: BorderSide(width: .5)),
+                hintText: language == eng
+                    ? 'Review'
+                    : language == rus ? "Отзыв" : "Izoh"),
+            controller: _feedbackController,
+          ));
+    } else
+      return Container();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,12 +89,12 @@ class _HospitalPageState extends State<HospitalPage> {
         children: <Widget>[
           Container(
             height: 200.0,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: NetworkImage(widget.hospital.imgUrl),
-                    fit: BoxFit.cover,
-                    colorFilter:
-                        ColorFilter.mode(Colors.black45, BlendMode.darken))),
+            child: FadeInImage.memoryNetwork(
+              image: widget.hospital.imgUrl,
+              placeholder:
+                  kTransparentImage, // new AssetImage('assets/hospital.jpg'),
+              fit: BoxFit.cover,
+            ),
           ),
           Container(
             padding: EdgeInsets.only(top: 15.0, right: 10.0, left: 10.0),
@@ -54,7 +112,7 @@ class _HospitalPageState extends State<HospitalPage> {
                 ),
                 Text(
                   widget.hospital.description,
-                  style: TextStyle(fontStyle: FontStyle.italic),
+                  style: TextStyle(),
                 ),
                 SizedBox(
                   height: 10.0,
@@ -124,7 +182,9 @@ class _HospitalPageState extends State<HospitalPage> {
                         children: <Widget>[
                           Text(
                             review.userName,
-                            style: TextStyle(fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontStyle: FontStyle.italic),
                           ),
                           SizedBox(
                             height: 5.0,
@@ -140,11 +200,14 @@ class _HospitalPageState extends State<HospitalPage> {
                       );
                     } else {
                       return Center(
-                        child: Text("No reviews"),
+                        child: Text(language == eng
+                            ? "No reviews"
+                            : language == rus ? "Нет отзывов" : "izoh yoq"),
                       );
                     }
                   },
-                )
+                ),
+                createTextbox()
               ],
             ),
           )
@@ -152,7 +215,7 @@ class _HospitalPageState extends State<HospitalPage> {
       )),
       bottomNavigationBar: GestureDetector(
         child: Container(
-          height: 60.0,
+          height: 55.0,
           color: accentColor,
           child: Center(
             child: Text(
@@ -165,6 +228,27 @@ class _HospitalPageState extends State<HospitalPage> {
           ),
         ),
         onTap: () {},
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            addReview = !addReview;
+            if (addReview) {
+              test();
+            }
+            // if (addReview) {
+            //   createReview().then((response) {
+            //     if (response.statusCode == 200) {
+            //       print("error on sending");
+            //     } else {
+            //       print('error on sending 2');
+            //     }
+            //   });
+            // }
+          });
+        },
+        backgroundColor: Colors.deepPurpleAccent,
+        child: addReview ? Icon(Icons.add_comment) : Icon(Icons.comment),
       ),
     );
   }

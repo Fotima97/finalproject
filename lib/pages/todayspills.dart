@@ -121,7 +121,7 @@ class TodayPillsState extends State<TodayPills> {
               itemBuilder: (context, index) {
                 Reminder reminder = snapshot.data[index];
                 Medication medication =
-                    medList.singleWhere((m) => m.medId == reminder.medId);
+                    medList.firstWhere((m) => m.medId == reminder.medId);
 
                 return Column(
                   children: <Widget>[

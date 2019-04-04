@@ -23,6 +23,7 @@ class HospitalModel {
       this.imgUrl});
   factory HospitalModel.fromJson(Map<String, dynamic> parsedJson) {
     var reviews = parsedJson['comments'] as List;
+
     List<Review> reviewList = reviews.map((i) => Review.fromJson(i)).toList();
     return HospitalModel(
         hospitalId: parsedJson['HospitalId'],
@@ -52,4 +53,7 @@ class Review {
         userName: parsedJson['UserName'] ?? "",
         review: parsedJson["CommentText"] ?? "");
   }
+
+  // Map<String, dynamic> toJson() =>
+  //     {"HospitalId": hospitalId, "UserName": userName, "Comment1": review};
 }

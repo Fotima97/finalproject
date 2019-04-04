@@ -4,6 +4,7 @@ import 'package:finalproject/helpers/appointmentImageModel.dart';
 import 'package:finalproject/helpers/appointmentModel.dart';
 import 'package:finalproject/helpers/medicationModel.dart';
 import 'package:finalproject/helpers/reminderModel.dart';
+import 'package:finalproject/helpers/usermodel.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -41,12 +42,21 @@ class DBProvider {
         'CREATE TABLE $appointmentTable ($appointmentId INTEGER PRIMARY KEY AUTOINCREMENT, $doctorName TEXT, $appointmentDate TEXT, $appointmentTime TEXT,$appointmentPlaceField TEXT, $specializationField  TEXT, $appointmentNotesField TEXT, $alarm BIT, $alarmTime TEXT)');
     await db.execute(
         'CREATE TABLE $imagesTable ($appointmentImageId INTEGER PRIMARY KEY AUTOINCREMENT, $appointmentId INTEGER, $imageSrc TEXT,Constraint fk_appointmentId FOREIGN KEY($appointmentId) REFERENCES $appointmentTable($appointmentId))');
+    await db.execute(
+        'CREATE TABLE $usersTable($fullName TEXT, $birthdatefield TEXT, $emailfield Text, $bloodType Text, $allergies Text)');
   }
 
   addMedication(Medication newMed) async {
     final db = await database;
     var res = await db.rawInsert(
         'INSERT Into $medicationTable ($medName,$shape,$color,$dosedb, $units, $times, $startDate, $endDate,$duration, $notes) VALUES ("${newMed.medName}", "${newMed.shape}", ${newMed.color},${newMed.dose},"${newMed.units}",${newMed.times},"${newMed.startDate}","${newMed.endDate}",${newMed.duration}, "${newMed.notes}")');
+    return res;
+  }
+
+  createUser(User user) async {
+    final db = await database;
+    var res = await db.rawInsert(
+        'INSERT Into $usersTable ($fullName,$birthdatefield,$emailfield,$bloodType, $allergies) VALUES ("${user.fullName}", "${user.birthDate}", "${user.email}","${user.bloodType}","${user.allergies}")');
     return res;
   }
 
@@ -88,6 +98,13 @@ class DBProvider {
     var res = await db
         .query("$medicationTable", where: "$medId = ?", whereArgs: [id]);
     return res.isNotEmpty ? Medication.fromJson(res.first) : Null;
+  }
+
+  getUser(String userName) async {
+    final db = await database;
+    var res = await db
+        .query("$usersTable", where: "$fullName = ?", whereArgs: [userName]);
+    return res.isNotEmpty ? User.fromJson(res.first) : Null;
   }
 
   Future<List<Appointment>> getAllAppointments() async {
@@ -201,6 +218,13 @@ class DBProvider {
     final db = await database;
     var res = await db.update("$reminderTable", newReminder.toJson(),
         where: "$reminderId = ?", whereArgs: [newReminder.reminderId]);
+    return res;
+  }
+
+  updateUser(User newUser) async {
+    final db = await database;
+    var res = await db.update("$medicationTable", newUser.toJson(),
+        where: "$fullName = ?", whereArgs: [newUser.fullName]);
     return res;
   }
 

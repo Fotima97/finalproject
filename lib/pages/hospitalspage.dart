@@ -95,10 +95,10 @@ class _HospitalsPageState extends State<HospitalsPage>
     if (connectivity == ConnectivityResult.mobile ||
         connectivity == ConnectivityResult.wifi) {
       final response = await client.get(language == eng
-          ? 'http://medassistant-001-site1.itempurl.com/api/hospitalapieng'
+          ? 'http://medicalassistant-001-site1.dtempurl.com/api/hospitalapi/eng'
           : language == rus
-              ? 'http://medassistant-001-site1.itempurl.com/api/hospitalapiru'
-              : 'http://medassistant-001-site1.itempurl.com/api/hospitalapiuz');
+              ? 'http://medicalassistant-001-site1.dtempurl.com/api/hospitalapi/ru'
+              : 'http://medicalassistant-001-site1.dtempurl.com/api/hospitalapi/uz');
 
       if (response.statusCode == 200) {
         String body = utf8.decode(response.bodyBytes);

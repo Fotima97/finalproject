@@ -1,9 +1,17 @@
+import 'dart:convert';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:finalproject/helpers/app_constants.dart';
+import 'package:finalproject/helpers/dbProvider.dart';
+import 'package:finalproject/helpers/usermodel.dart';
+import 'package:finalproject/pages/homepage.dart';
 import 'package:finalproject/pages/languagepage.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 
 class FormPage extends StatefulWidget {
   FormPage({Key key, this.title}) : super(key: key);
@@ -21,7 +29,7 @@ class _FormPageState extends State<FormPage> {
   TextEditingController _birthdateController = new TextEditingController();
   TextEditingController _allergiesController = new TextEditingController();
   TextEditingController _emailController = new TextEditingController();
-
+  bool _checkboxValue = false;
   DateTime selectedDate = DateTime.now();
 
   List<DropdownMenuItem<String>> _dropdDownMenuItems;
@@ -31,6 +39,7 @@ class _FormPageState extends State<FormPage> {
     super.initState();
     _dropdDownMenuItems = _getmenuitems();
     _dropdownvalue = _dropdDownMenuItems[0].value;
+    checkConnectivity();
   }
 
   List<DropdownMenuItem<String>> _getmenuitems() {
@@ -103,14 +112,58 @@ class _FormPageState extends State<FormPage> {
     return items;
   }
 
-  _saveUserData(String fullname, String birthdate, String bloodtype,
-      String allergies, String email) async {
+  createUser(User user) async {
+    var userEncode = jsonEncode({
+      "FullName": user.fullName,
+      "Birthdate": user.birthDate,
+      "Email": user.email,
+      "BloodType": user.bloodType,
+      "Allergies": user.allergies
+    });
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString(userFullName, fullname);
-    preferences.setString(userBirthDate, birthdate);
-    preferences.setString(userBloodType, bloodtype);
-    preferences.setString(userAllergies, allergies);
-    preferences.setString(userEmail, email);
+    if (_checkboxValue) {
+      if (connectivity == ConnectivityResult.mobile ||
+          connectivity == ConnectivityResult.wifi) {
+        final responce = await http.post(
+            "http://medicalassistant-001-site1.dtempurl.com/api/userapi/post",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+            body: userEncode);
+        print(responce.body);
+        if (responce.statusCode == 200) {
+          preferences.setBool(onlineSaved, true);
+        }
+        print("response code" + responce.statusCode.toString());
+      }
+    } else {
+      Flushbar()
+        ..title = language == eng
+            ? "Problems with connection"
+            : language == rus
+                ? "Проблемы с подключение"
+                : "Ulanish bilan bog'liq muammolar"
+        ..message = language == eng
+            ? "Data is not uploaded to database"
+            : language == rus
+                ? "Данные не загружены в базу данных "
+                : "Ma'lumotlar bazaga yuklanmadi"
+        ..duration = Duration(seconds: 1)
+        ..icon = Icon(
+          Icons.info,
+          color: Colors.white,
+        )
+        ..backgroundColor = Colors.red
+        ..show(context);
+    }
+  }
+
+  _saveUserData(User user) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString(userFullName, user.fullName);
+    await DBProvider.db.createUser(user);
+    createUser(user);
   }
 
   _setloginState(bool value) async {
@@ -367,6 +420,24 @@ class _FormPageState extends State<FormPage> {
                       SizedBox(
                         height: blankspace * 2,
                       ),
+                      ListTile(
+                        title: Text(language == eng
+                            ? "Add to database"
+                            : language == rus
+                                ? "Добавить в базу данных"
+                                : "Ma'lumotlar bazasiga qo'shish"),
+                        trailing: Checkbox(
+                          value: _checkboxValue,
+                          onChanged: (value) {
+                            setState(() {
+                              _checkboxValue = value;
+                            });
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: blankspace * 2,
+                      ),
                       Container(
                         alignment: Alignment.centerRight,
                         padding: EdgeInsets.only(left: 40.0),
@@ -393,12 +464,13 @@ class _FormPageState extends State<FormPage> {
                               ),
                               onPressed: () {
                                 if (_formkey.currentState.validate()) {
-                                  _saveUserData(
-                                      _fullnameController.text,
-                                      _birthdateController.text,
-                                      _dropdownvalue,
-                                      _allergiesController.text,
-                                      _emailController.text);
+                                  User user = new User(
+                                      fullName: _fullnameController.text,
+                                      birthDate: _birthdateController.text,
+                                      bloodType: _dropdownvalue,
+                                      allergies: _allergiesController.text,
+                                      email: _emailController.text);
+                                  _saveUserData(user);
                                   _setloginState(true);
                                   Navigator.of(context).pushNamedAndRemoveUntil(
                                       '/home', (Route<dynamic> route) => false);

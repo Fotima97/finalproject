@@ -3,7 +3,10 @@ import 'package:cron/cron.dart';
 import 'package:finalproject/helpers/app_constants.dart';
 import 'package:finalproject/helpers/dbProvider.dart';
 import 'package:finalproject/helpers/reminderModel.dart';
+import 'package:finalproject/helpers/usermodel.dart';
+import 'package:finalproject/pages/addmedicinepage.dart';
 import 'package:finalproject/pages/languagepage.dart';
+import 'package:finalproject/pages/profilepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar/flutter_calendar.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -11,11 +14,6 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:connectivity/connectivity.dart';
 
-String fullname = "";
-String birthdate = "";
-String bloodtype = "";
-String allergise = "";
-String email = "";
 List<String> savedImages = [];
 var connectivity;
 
@@ -30,6 +28,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   double boxHeight = 180.0;
+  User user;
+
   List<Reminder> reminders = new List<Reminder>();
   @override
   void initState() {
@@ -38,14 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _getProfilevalues();
     getsavedImages();
     checkConnectivity();
-    var cron = new Cron();
-    cron.schedule(new Schedule.parse('*/3 * * * *'), () async {
-      updateReminders();
-      print('every 3 minutes');
-    });
-    cron.schedule(new Schedule(minutes: 2), () async {
-      print('between every 2minutes');
-    });
+
     super.initState();
   }
 
@@ -69,31 +62,38 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _getProfilevalues() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
+    String fullname;
     if (preferences.getString(userFullName) != null) {
       fullname = preferences.getString(userFullName);
+      await DBProvider.db.getUser(fullName);
     } else {
-      fullname = "...";
+      user = new User(
+          fullName: "-",
+          birthDate: "-",
+          email: "-",
+          bloodType: "-",
+          allergies: "-");
     }
-    if (preferences.getString(userBirthDate) != null) {
-      birthdate = preferences.getString(userBirthDate);
-    } else {
-      birthdate = "...";
-    }
-    if (preferences.getString(userEmail) != null) {
-      email = preferences.getString(userEmail);
-    } else {
-      email = "...";
-    }
-    if (preferences.getString(userBloodType) != null) {
-      bloodtype = preferences.getString(userBloodType);
-    } else {
-      bloodtype = "...";
-    }
-    if (preferences.getString(userAllergies) != null) {
-      allergise = preferences.getString(userAllergies);
-    } else {
-      allergise = "...";
-    }
+    // if (preferences.getString(userBirthDate) != null) {
+    //   birthdate = preferences.getString(userBirthDate);
+    // } else {
+    //   birthdate = "...";
+    // }
+    // if (preferences.getString(userEmail) != null) {
+    //   email = preferences.getString(userEmail);
+    // } else {
+    //   email = "...";
+    // }
+    // if (preferences.getString(userBloodType) != null) {
+    //   bloodtype = preferences.getString(userBloodType);
+    // } else {
+    //   bloodtype = "...";
+    // }
+    // if (preferences.getString(userAllergies) != null) {
+    //   allergise = preferences.getString(userAllergies);
+    // } else {
+    //   allergise = "...";
+    // }
   }
 
   checkLanguage() async {
@@ -125,7 +125,10 @@ class _MyHomePageState extends State<MyHomePage> {
           child: MaterialButton(
             color: Color(0xFFAE80FC),
             onPressed: () {
-              Navigator.pushNamed(context, "/profile");
+              MaterialPageRoute(
+                  builder: (context) => ProfilePage(
+                        user: user,
+                      ));
             },
             minWidth: 20.0,
             child: Icon(
@@ -196,17 +199,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         softWrap: true,
                         overflow: TextOverflow.fade,
                       ),
-                      Text(
-                        "1 pill to take",
-                        softWrap: true,
-                        overflow: TextOverflow.fade,
-                        style: TextStyle(color: Colors.white, fontSize: 16.0),
-                      )
                     ],
                   ),
                 ),
               ),
               onTap: () {
+                newMedication = false;
                 Navigator.pushNamed(context, '/medicines');
               },
             ),
@@ -239,7 +237,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               language == eng
                                   ? "Doctor's appointments tracker"
                                   : language == rus
-                                      ? "Отслеживание посещения врача"
+                                      ? "Отслеживание посещений к врачу"
                                       : "Vrach tashrifi nazorati",
                               style: TextStyle(
                                   color: Colors.white, fontSize: 18.0),
@@ -249,13 +247,6 @@ class _MyHomePageState extends State<MyHomePage> {
                             SizedBox(
                               height: 3.0,
                             ),
-                            Text(
-                              "no notes for today",
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 13.0),
-                              softWrap: true,
-                              overflow: TextOverflow.clip,
-                            )
                           ],
                         ),
                       ),
@@ -277,7 +268,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       //   width: 155.0,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: AssetImage('assets/news.jpg'),
+                              image: AssetImage('assets/hospital.jpg'),
                               fit: BoxFit.cover,
                               colorFilter: ColorFilter.mode(
                                   Colors.black45, BlendMode.darken)),
@@ -290,8 +281,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           children: <Widget>[
                             Text(
                               language == eng
-                                  ? "News"
-                                  : language == rus ? "Новости" : "Yangiliklar",
+                                  ? "Hospitals"
+                                  : language == rus
+                                      ? "Больницы"
+                                      : "Shifoxonalar ",
                               style: TextStyle(
                                   color: Colors.white, fontSize: 20.0),
                               softWrap: true,
@@ -302,7 +295,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     onTap: () {
-                      Navigator.pushNamed(context, "/news");
+                      Navigator.pushNamed(context, '/hospitals');
                     },
                   ),
                 ),
@@ -310,43 +303,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             SizedBox(
               height: 10.0,
-            ),
-            InkWell(
-              child: Container(
-                height: boxHeight,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/hospital.jpg'),
-                      fit: BoxFit.cover,
-                      colorFilter:
-                          ColorFilter.mode(Colors.black45, BlendMode.darken)),
-                  //  color: backgroundColor,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 35.0, vertical: 25.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        language == eng
-                            ? "Hospitals"
-                            : language == rus ? "Больницы" : "Shifoxonalar ",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30.0,
-                        ),
-                        softWrap: true,
-                        overflow: TextOverflow.fade,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              onTap: () {
-                Navigator.pushNamed(context, '/hospitals');
-              },
             ),
           ],
         ),
