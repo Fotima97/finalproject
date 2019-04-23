@@ -65,41 +65,42 @@ class _HospitalPageState extends State<HospitalPage> {
             body: msg);
         return response;
       } else {
-        Flushbar()
-          ..title =
-              language == eng ? 'Error' : language == rus ? "Ошибка" : "Xatolik"
-          ..message = language == eng
-              ? 'You cannot post empty review'
-              : language == rus
-                  ? "Вы не можете оставить пустой отзыв"
-                  : "Siz bo'sh ko'rib chiqishni yubora olmaysiz"
-          ..duration = Duration(seconds: 3)
-          ..icon = Icon(
-            Icons.info,
-            color: Colors.white,
-          )
-          ..backgroundColor = Colors.red
+        Flushbar(
+            title: language == eng
+                ? 'Error'
+                : language == rus ? "Ошибка" : "Xatolik",
+            message: language == eng
+                ? 'You cannot post empty review'
+                : language == rus
+                    ? "Вы не можете оставить пустой отзыв"
+                    : "Siz bo'sh ko'rib chiqishni yubora olmaysiz",
+            duration: Duration(seconds: 3),
+            icon: Icon(
+              Icons.info,
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.red)
           ..show(context);
         return null;
       }
     } else {
-      Flushbar()
-        ..title = language == eng
-            ? "Problems with internet connection"
-            : language == rus
-                ? "Проблемы с подключением к сети"
-                : "Internetga ulanish bilan muamolar"
-        ..message = language == eng
-            ? "Check network connectivity"
-            : language == rus
-                ? "Проверьте подключение к сети"
-                : "Tarmoqga ulanishini tekshiring"
-        ..duration = Duration(seconds: 3)
-        ..icon = Icon(
-          Icons.info,
-          color: Colors.white,
-        )
-        ..backgroundColor = Colors.red
+      Flushbar(
+          title: language == eng
+              ? "Problems with internet connection"
+              : language == rus
+                  ? "Проблемы с подключением к сети"
+                  : "Internetga ulanish bilan muamolar",
+          message: language == eng
+              ? "Check network connectivity"
+              : language == rus
+                  ? "Проверьте подключение к сети"
+                  : "Tarmoqga ulanishini tekshiring",
+          duration: Duration(seconds: 3),
+          icon: Icon(
+            Icons.info,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.red)
         ..show(context);
       return null;
     }
@@ -112,24 +113,6 @@ class _HospitalPageState extends State<HospitalPage> {
     getUserName();
     checkConnectivity();
   }
-
-  // test() async {
-  //   final msg = jsonEncode({
-  //     "HospitalId": 2,
-  //     "UserName": "Fotima Khayrullaeva",
-  //     "Comment1": "Test!"
-  //   });
-
-  //   final responce = await http.post(
-  //       "http://medicalassistant-001-site1.dtempurl.com/api/reviewapi/post",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         "Accept": "application/json"
-  //       },
-  //       body: msg);
-  //   print(responce.body);
-  //   print("response code" + responce.statusCode.toString());
-  // }
 
   Widget createTextbox() {
     _feedbackController.clear();
@@ -165,23 +148,23 @@ class _HospitalPageState extends State<HospitalPage> {
               ),
             ));
       } else {
-        Flushbar()
-          ..title = language == eng
-              ? "You are not registered online"
-              : language == rus
-                  ? "Вы не зарегистрированы онлайн"
-                  : "Siz onlayn ro'yxatdan o'tmagansiz"
-          ..message = language == eng
-              ? "Please register online"
-              : language == rus
-                  ? " Пожалуйста пройдите онлайн регистрацию"
-                  : "Iltimos,onlaynda ro'yxatdan o'ting"
-          ..duration = Duration(seconds: 3)
-          ..icon = Icon(
-            Icons.info,
-            color: Colors.white,
-          )
-          ..backgroundColor = Colors.red
+        Flushbar(
+            title: language == eng
+                ? "You are not registered online"
+                : language == rus
+                    ? "Вы не зарегистрированы онлайн"
+                    : "Siz onlayn ro'yxatdan o'tmagansiz",
+            message: language == eng
+                ? "Please register online"
+                : language == rus
+                    ? " Пожалуйста пройдите онлайн регистрацию"
+                    : "Iltimos,onlaynda ro'yxatdan o'ting",
+            duration: Duration(seconds: 3),
+            icon: Icon(
+              Icons.info,
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.red)
           ..show(context);
         return Container();
       }
@@ -345,7 +328,7 @@ class _HospitalPageState extends State<HospitalPage> {
           ),
         ),
         onTap: () {
-           Navigator.push(
+          Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => Map(
@@ -362,19 +345,19 @@ class _HospitalPageState extends State<HospitalPage> {
               createReview().then((response) {
                 if (response != null) {
                   if (response.statusCode == 200) {
-                    Flushbar()
-                      ..title = language == eng
-                          ? "Successfully added"
-                          : language == rus
-                              ? "Успешно добавлено"
-                              : "Muvaffaqiyatli qo'shildi"
-                      ..message = ""
-                      ..duration = Duration(seconds: 3)
-                      ..icon = Icon(
-                        Icons.info,
-                        color: Colors.white,
-                      )
-                      ..backgroundColor = Colors.green
+                    Flushbar(
+                        title: language == eng
+                            ? "Successfully added"
+                            : language == rus
+                                ? "Успешно добавлено"
+                                : "Muvaffaqiyatli qo'shildi",
+                        message: "",
+                        duration: Duration(seconds: 3),
+                        icon: Icon(
+                          Icons.info,
+                          color: Colors.white,
+                        ),
+                        backgroundColor: Colors.green)
                       ..show(context);
                   }
                 }

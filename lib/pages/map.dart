@@ -19,15 +19,22 @@ class _MapState extends State<Map> {
   double zoomValue = 5.0;
   @override
   void initState() {
+    _hosptial = widget.hospital;
+
     // TODO: implement initState
     super.initState();
-    _hosptial = widget.hospital;
-    markers.add(hospitalMarker);
+    markers.add(Marker(
+        markerId: MarkerId(_hosptial.title),
+        position: LatLng(_hosptial.lat, _hosptial.long),
+        infoWindow: InfoWindow(title: _hosptial.title),
+        icon:
+            BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet)));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text(widget.hospital.title)),
       body: Stack(
         children: <Widget>[
           _googleMap(context),
@@ -37,12 +44,6 @@ class _MapState extends State<Map> {
       ),
     );
   }
-
-  Marker hospitalMarker = Marker(
-      markerId: MarkerId(_hosptial.title),
-      position: LatLng(_hosptial.lat, _hosptial.long),
-      infoWindow: InfoWindow(title: _hosptial.title),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet));
 
   Widget _zoomMinusFunction() {
     return Align(

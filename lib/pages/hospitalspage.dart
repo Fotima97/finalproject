@@ -54,15 +54,23 @@ class _HospitalsPageState extends State<HospitalsPage>
       _hospitalJson = jsonFile.readAsStringSync();
       return parseHospitals(_hospitalJson);
     } else {
-      Flushbar()
-        ..title = language==eng?"Problems with internet connection":language==rus?"Проблемы с подключением к сети":"Internetga ulanish bilan muamolar"
-        ..message =language==eng?"Check network connectivity":language==rus? "Проверьте подключение к сети":"Tarmoqga ulanishini tekshiring"
-        ..duration = Duration(seconds: 3)
-        ..icon = Icon(
-          Icons.info,
-          color: Colors.white,
-        )
-        ..backgroundColor = Colors.red
+      Flushbar(
+          title: language == eng
+              ? "Problems with internet connection"
+              : language == rus
+                  ? "Проблемы с подключением к сети"
+                  : "Internetga ulanish bilan muamolar",
+          message: language == eng
+              ? "Check network connectivity"
+              : language == rus
+                  ? "Проверьте подключение к сети"
+                  : "Tarmoqga ulanishini tekshiring",
+          duration: Duration(seconds: 3),
+          icon: Icon(
+            Icons.info,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.red)
         ..show(context);
       return null;
     }
@@ -200,7 +208,6 @@ class _HospitalsPageState extends State<HospitalsPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-      
         title: Text(language == eng
             ? "Hospitals"
             : language == rus ? "Больницы" : "Shifoxonalar"),
@@ -248,8 +255,7 @@ class _HospitalsPageState extends State<HospitalsPage>
             //     );
             //   },
             // );
-          }
-         else {
+          } else {
             return Center(child: CircularProgressIndicator());
           }
         },

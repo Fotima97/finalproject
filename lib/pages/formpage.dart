@@ -138,23 +138,23 @@ class _FormPageState extends State<FormPage> {
         print("response code" + responce.statusCode.toString());
       }
     } else {
-      Flushbar()
-        ..title = language == eng
+      Flushbar(
+        title : language == eng
             ? "Problems with connection"
             : language == rus
                 ? "Проблемы с подключение"
-                : "Ulanish bilan bog'liq muammolar"
-        ..message = language == eng
+                : "Ulanish bilan bog'liq muammolar",
+        message : language == eng
             ? "Data is not uploaded to database"
             : language == rus
                 ? "Данные не загружены в базу данных "
-                : "Ma'lumotlar bazaga yuklanmadi"
-        ..duration = Duration(seconds: 1)
-        ..icon = Icon(
+                : "Ma'lumotlar bazaga yuklanmadi",
+        duration :Duration(seconds: 1),
+        icon : Icon(
           Icons.info,
           color: Colors.white,
-        )
-        ..backgroundColor = Colors.red
+        ),
+        backgroundColor: Colors.red)
         ..show(context);
     }
   }
