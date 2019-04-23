@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 final backgroundColor = Color(0xFFF5F6FE);
 final accentColor = Color(0xFFfa5a96);
 final greyColor = Color(0xFFc1c3f3);
-final primaryColor = Color(0xFF9b63f8);
+final primaryColor = Colors.deepPurpleAccent; //Color(0xFF9b63f8);
 
 final blueColor = Color(0xFF94AEFC);
 final greenColor = Color(0xFF32CBA5);
@@ -21,12 +21,10 @@ final languageState = "language";
 final eng = "ENG";
 final rus = "RUS";
 final uzb = "UZB";
-final userFullName = 'fullname';
 final userBirthDate = 'birthdate';
 final userBloodType = 'bloodType';
 final userAllergies = "allergies";
 final userEmail = "email";
-final onlineSaved = "OnlineSaved";
 final appName = "Final Project";
 final i1 = "i+";
 final i2 = "i-";
@@ -36,9 +34,7 @@ final b1 = "iii+";
 final b2 = "iii-";
 final c1 = "iv+";
 final c2 = "iv-";
-final switchValue = "SwitchValue";
-final loginState = "logged in";
-final photos = "photos";
+final profile = "profile";
 final edit = "Edit";
 
 //database
@@ -72,11 +68,20 @@ final alarm = "Alarm";
 final alarmTime = "AlarmTime";
 final appointmentImageId = "AppointmentImageId";
 final imageSrc = "ImageSrc";
+final userId = "userId";
 final fullName = "FullName";
 final birthdatefield = "BirthDate";
 final emailfield = "Email";
 final bloodType = "BloodType";
 final allergies = "Allergies";
+
+//shared preferences keys
+final registered = "registerState";
+final onlineSaved = "OnlineSaved";
+final loginState = "logged in";
+final userFullName = 'fullname';
+final notificationsStatus = "notificationsStatus";
+final switchValue = "SwitchValue";
 
 //Pills shapes
 final circlepillShape = "assets/circlepill.png";

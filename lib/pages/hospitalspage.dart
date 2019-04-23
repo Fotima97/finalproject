@@ -55,9 +55,9 @@ class _HospitalsPageState extends State<HospitalsPage>
       return parseHospitals(_hospitalJson);
     } else {
       Flushbar()
-        ..title = "Проблемы с сервером"
-        ..message = "Проверьте подключение к сети"
-        ..duration = Duration(seconds: 1)
+        ..title = language==eng?"Problems with internet connection":language==rus?"Проблемы с подключением к сети":"Internetga ulanish bilan muamolar"
+        ..message =language==eng?"Check network connectivity":language==rus? "Проверьте подключение к сети":"Tarmoqga ulanishini tekshiring"
+        ..duration = Duration(seconds: 3)
         ..icon = Icon(
           Icons.info,
           color: Colors.white,
@@ -71,10 +71,10 @@ class _HospitalsPageState extends State<HospitalsPage>
   void _saveJsonToFileSystem(String fileName, String content) {
     getApplicationDocumentsDirectory().then((Directory directory) {
       dir = directory;
-      String path = language == eng
-          ? "/hospitalsen"
-          : language == rus ? "/hospitalsenru" : "/hospitalsenuz";
-      jsonFile = new File(dir.path + path + fileName);
+      // String path = language == eng
+      //     ? "/hospitalsen"
+      //     : language == rus ? "/hospitalsenru" : "/hospitalsenuz";
+      jsonFile = new File(dir.path + "/" + fileName);
       fileExists = jsonFile.existsSync();
       jsonFile.writeAsStringSync(content);
     });
@@ -84,7 +84,6 @@ class _HospitalsPageState extends State<HospitalsPage>
     final parsed = json.decode(responseBody);
     var jsonData;
     jsonData = (parsed).cast<Map<String, dynamic>>();
-
     return jsonData
         .map<HospitalModel>((json) => HospitalModel.fromJson(json))
         .toList();
@@ -124,6 +123,17 @@ class _HospitalsPageState extends State<HospitalsPage>
     super.dispose();
   }
 
+  BoxDecoration containerDecoration = BoxDecoration(
+      borderRadius: BorderRadius.circular(8.0),
+      color: Colors.white,
+      boxShadow: <BoxShadow>[
+        BoxShadow(
+          offset: Offset(5.0, 5.0),
+          color: Color(0xffEDEDED),
+          blurRadius: 5.0,
+        )
+      ]);
+
   Widget createHospitalRow(HospitalModel hospital, List<Review> reviewslist) {
     return Material(
       child: MaterialButton(
@@ -135,35 +145,34 @@ class _HospitalsPageState extends State<HospitalsPage>
                         hospital: hospital,
                       )));
         },
-        child: Column(
-          children: <Widget>[
-            ListTile(
-              title: Text(hospital.title),
-              subtitle: Text(
-                hospital.address,
-                style: TextStyle(fontSize: 11.0),
-              ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(
-                    reviewslist.length.toString(),
-                    style: TextStyle(color: Colors.green),
-                  ),
-                  SizedBox(
-                    width: 3.0,
-                  ),
-                  Text(
-                    language == eng
-                        ? "reviews"
-                        : language == rus ? "отзывы" : "izohlar",
-                    style: TextStyle(color: Colors.green),
-                  )
-                ],
-              ),
+        child: Container(
+          margin: EdgeInsets.only(bottom: 8.0),
+          decoration: containerDecoration,
+          child: ListTile(
+            title: Text(hospital.title),
+            subtitle: Text(
+              hospital.address,
+              style: TextStyle(fontSize: 11.0),
             ),
-            Divider()
-          ],
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  reviewslist.length.toString(),
+                  style: TextStyle(color: Colors.green),
+                ),
+                SizedBox(
+                  width: 3.0,
+                ),
+                Text(
+                  language == eng
+                      ? "reviews"
+                      : language == rus ? "отзывы" : "izohlar",
+                  style: TextStyle(color: Colors.green),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -191,16 +200,7 @@ class _HospitalsPageState extends State<HospitalsPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: <Widget>[
-          MaterialButton(
-            minWidth: 30.0,
-            child: Icon(
-              Icons.location_on,
-              color: Colors.white,
-            ),
-            onPressed: () {},
-          )
-        ],
+      
         title: Text(language == eng
             ? "Hospitals"
             : language == rus ? "Больницы" : "Shifoxonalar"),
@@ -248,7 +248,8 @@ class _HospitalsPageState extends State<HospitalsPage>
             //     );
             //   },
             // );
-          } else {
+          }
+         else {
             return Center(child: CircularProgressIndicator());
           }
         },

@@ -16,6 +16,16 @@ class PillsList extends StatefulWidget {
 }
 
 class PillsListState extends State<PillsList> {
+  BoxDecoration containerDecoration = BoxDecoration(
+      borderRadius: BorderRadius.circular(8.0),
+      color: Colors.white,
+      boxShadow: <BoxShadow>[
+        BoxShadow(
+          offset: Offset(5.0, 5.0),
+          color: Color(0xffEDEDED),
+          blurRadius: 5.0,
+        )
+      ]);
   String checkStatus(String date) {
     String status;
     DateTime enddate = DateTime.parse(date);
@@ -52,9 +62,11 @@ class PillsListState extends State<PillsList> {
               itemBuilder: (context, index) {
                 Medication med = snapshot.data[index];
                 Future<List<Reminder>> reminderList = getReminder(med.medId);
-                return Column(
-                  children: <Widget>[
-                    ListTile(
+                return Container(
+                    padding: EdgeInsets.symmetric(vertical: 5.0),
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    decoration: containerDecoration,
+                    child: ListTile(
                       leading: Image.asset(
                         med.shape,
                         width: 25.0,
@@ -73,10 +85,7 @@ class PillsListState extends State<PillsList> {
                                       reminder: reminderList,
                                     )));
                       },
-                    ),
-                    Divider()
-                  ],
-                );
+                    ));
               },
             );
           } else {

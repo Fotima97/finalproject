@@ -13,6 +13,7 @@ class DocSpecialization extends StatefulWidget {
 
 class DocSpecializationState extends State<DocSpecialization> {
   List<DropdownMenuItem<String>> _dropdDownMenuItems;
+  TextStyle fontstyle = TextStyle(color: Colors.grey);
   String obstetrian =
       language == eng ? "Obstetrician" : language == rus ? "Акушер" : "Akusher";
   String allergist = language == eng
@@ -68,84 +69,98 @@ class DocSpecializationState extends State<DocSpecialization> {
     items.add(DropdownMenuItem(
       child: Text(
         obstetrian,
+        style: fontstyle,
       ),
       value: obstetrian,
     ));
     items.add(DropdownMenuItem(
       child: Text(
         allergist,
+        style: fontstyle,
       ),
       value: allergist,
     ));
     items.add(DropdownMenuItem(
       child: Text(
         anasteziolog,
+        style: fontstyle,
       ),
       value: anasteziolog,
     ));
     items.add(DropdownMenuItem(
       child: Text(
         venerolog,
+        style: fontstyle,
       ),
       value: venerolog,
     ));
     items.add(DropdownMenuItem(
       child: Text(
         gastroenterolog,
+        style: fontstyle,
       ),
       value: gastroenterolog,
     ));
     items.add(DropdownMenuItem(
       child: Text(
         gynecolog,
+        style: fontstyle,
       ),
       value: gynecolog,
     ));
     items.add(DropdownMenuItem(
       child: Text(
         cardiologist,
+        style: fontstyle,
       ),
       value: cardiologist,
     ));
     items.add(DropdownMenuItem(
       child: Text(
         cosmetologist,
+        style: fontstyle,
       ),
       value: cosmetologist,
     ));
     items.add(DropdownMenuItem(
       child: Text(
         masseur,
+        style: fontstyle,
       ),
       value: masseur,
     ));
     items.add(DropdownMenuItem(
       child: Text(
         neurologist,
+        style: fontstyle,
       ),
       value: neurologist,
     ));
     items.add(DropdownMenuItem(
       child: Text(
         pediatrician,
+        style: fontstyle,
       ),
       value: pediatrician,
     ));
     items.add(DropdownMenuItem(
       child: Text(
         dentist,
+        style: fontstyle,
       ),
       value: dentist,
     ));
     items.add(DropdownMenuItem(
       child: Text(
         ultrasound,
+        style: fontstyle,
       ),
       value: ultrasound,
     ));
     items.add(DropdownMenuItem(
       child: Text(
         other,
+        style: fontstyle,
       ),
       value: other,
     ));
@@ -156,41 +171,50 @@ class DocSpecializationState extends State<DocSpecialization> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return FormField(
-      builder: (FormFieldState state) {
-        return InputDecorator(
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              gapPadding: 0.0,
-              borderSide: BorderSide(width: 0.0),
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            filled: true,
-            fillColor: Colors.white,
-            suffixIcon: Container(
-              margin: EdgeInsets.all(0.0),
-              padding: EdgeInsets.all(11.0),
-              child: Image.asset(
-                'assets/specializationIcon.png',
-                height: .2,
-                color: Colors.grey,
+    return Container(
+      padding: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.0),
+          color: Colors.white,
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              offset: Offset(5.0, 5.0),
+              color: Color(0xffEDEDED),
+              blurRadius: 5.0,
+            )
+          ]),
+      child: FormField(
+        builder: (FormFieldState state) {
+          return InputDecorator(
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              //   filled: true,
+              fillColor: Colors.white,
+              suffixIcon: Container(
+                margin: EdgeInsets.all(0.0),
+                padding: EdgeInsets.all(11.0),
+                child: Image.asset(
+                  'assets/specializationIcon.png',
+                  height: .2,
+                  color: Colors.grey,
+                ),
               ),
             ),
-          ),
-          isEmpty: specialDropDown == "",
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton(
-              items: _dropdDownMenuItems,
-              value: specialDropDown,
-              onChanged: (String v) {
-                setState(() {
-                  specialDropDown = v;
-                });
-              },
+            isEmpty: specialDropDown == "",
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton(
+                items: _dropdDownMenuItems,
+                value: specialDropDown,
+                onChanged: (String v) {
+                  setState(() {
+                    specialDropDown = v;
+                  });
+                },
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

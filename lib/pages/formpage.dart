@@ -166,6 +166,11 @@ class _FormPageState extends State<FormPage> {
     createUser(user);
   }
 
+  _setRegisterState(bool value) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setBool(registered, value);
+  }
+
   _setloginState(bool value) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool(loginState, value);
@@ -234,12 +239,21 @@ class _FormPageState extends State<FormPage> {
                     children: <Widget>[
                       TextFormField(
                         validator: (value) {
+                          Pattern pattern =
+                              r'^[a-zA-Z]{4,}(?: [a-zA-Z]+){0,2}$';
+                          RegExp regex = new RegExp(pattern);
                           if (value.isEmpty) {
                             return language == eng
                                 ? 'Required field'
                                 : language == rus
                                     ? "Обязательное поле"
                                     : "To'ldirilishi majburiy";
+                          } else if (!regex.hasMatch(value)) {
+                            return language == eng
+                                ? 'Enter valid value'
+                                : language == rus
+                                    ? "Введите правильное значение"
+                                    : "To'g'ri qiymat kiriting";
                           }
                         },
                         controller: _fullnameController,
@@ -288,6 +302,7 @@ class _FormPageState extends State<FormPage> {
                             }
                           },
                           decoration: InputDecoration(
+                              errorStyle: TextStyle(color: Colors.red),
                               filled: true,
                               fillColor: Color(0xFFE2E4FB),
                               focusedBorder: OutlineInputBorder(),
@@ -420,19 +435,26 @@ class _FormPageState extends State<FormPage> {
                       SizedBox(
                         height: blankspace * 2,
                       ),
-                      ListTile(
-                        title: Text(language == eng
-                            ? "Add to database"
-                            : language == rus
-                                ? "Добавить в базу данных"
-                                : "Ma'lumotlar bazasiga qo'shish"),
-                        trailing: Checkbox(
-                          value: _checkboxValue,
-                          onChanged: (value) {
-                            setState(() {
-                              _checkboxValue = value;
-                            });
-                          },
+                      Padding(
+                        padding: const EdgeInsets.only(left: 28.0),
+                        child: ListTile(
+                          title: Text(
+                            language == eng
+                                ? "Add to online database"
+                                : language == rus
+                                    ? "Добавить в онлайн базу данных"
+                                    : "Ma'lumotlar online bazasiga qo'shish",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          trailing: Checkbox(
+                            value: _checkboxValue,
+                            activeColor: primaryColor,
+                            onChanged: (value) {
+                              setState(() {
+                                _checkboxValue = value;
+                              });
+                            },
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -472,6 +494,7 @@ class _FormPageState extends State<FormPage> {
                                       email: _emailController.text);
                                   _saveUserData(user);
                                   _setloginState(true);
+                                  _setRegisterState(true);
                                   Navigator.of(context).pushNamedAndRemoveUntil(
                                       '/home', (Route<dynamic> route) => false);
                                 }

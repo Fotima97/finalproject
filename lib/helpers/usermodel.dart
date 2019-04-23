@@ -11,11 +11,11 @@ class User {
       this.allergies,
       this.email});
   factory User.fromJson(Map<String, dynamic> parsedJson) => User(
-      fullName: parsedJson["fullName"] ?? "",
-      birthDate: parsedJson["birthDate"] ?? "",
-      bloodType: parsedJson["bloodType"] ?? "",
-      allergies: parsedJson["allergies"] ?? "",
-      email: parsedJson["email"] ?? "");
+      fullName: parsedJson["FullName"] ?? "",
+      birthDate: parsedJson["BirthDate"] ?? "",
+      bloodType: parsedJson["BloodType"] ?? "",
+      allergies: parsedJson["Allergies"] ?? "",
+      email: parsedJson["Email"] ?? "");
 
   Map<String, dynamic> toJson() => {
         "fullName": fullName,

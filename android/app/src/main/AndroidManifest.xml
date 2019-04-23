@@ -16,7 +16,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="finalproject"
+        android:label="Med assistant"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -33,7 +33,7 @@
                 android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
                 android:value="true" />
                  <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyDrHKl8IxB4cGXIoELXQOzzZwiH1xtsRf4"/>
+               android:value="AIzaSyDoqt8dD9aZn3A1srLBPs3Q-hDw2SLfryE"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

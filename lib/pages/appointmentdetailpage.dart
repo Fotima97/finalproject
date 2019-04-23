@@ -27,7 +27,7 @@ class AppointmentDetail extends StatefulWidget {
 
 class AppointmentDetailState extends State<AppointmentDetail> {
   List<Images> images = new List<Images>();
-
+  TextStyle fontstyle = new TextStyle(color: Colors.grey, fontSize: 16.0);
   deleteAppointment(BuildContext context) async {
     await DBProvider.db.deleteAppointment(widget.appointment.appointmentId);
     Navigator.popUntil(context, (route) {
@@ -143,7 +143,7 @@ class AppointmentDetailState extends State<AppointmentDetail> {
                           language == eng
                               ? "Doctor"
                               : language == rus ? "Врач" : "Shifokor",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: fontstyle,
                         ),
                       ),
                       Expanded(
@@ -151,6 +151,7 @@ class AppointmentDetailState extends State<AppointmentDetail> {
                         child: Text(
                           widget.appointment.doctorName,
                           textAlign: TextAlign.right,
+                          style: fontstyle,
                         ),
                       )
                     ],
@@ -171,14 +172,12 @@ class AppointmentDetailState extends State<AppointmentDetail> {
                                 : language == rus
                                     ? "Cпециализация"
                                     : "Mutaxassislik",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: fontstyle),
                       ),
                       Expanded(
                         flex: 1,
-                        child: Text(
-                          widget.appointment.specialization,
-                          textAlign: TextAlign.right,
-                        ),
+                        child: Text(widget.appointment.specialization,
+                            textAlign: TextAlign.right, style: fontstyle),
                       )
                     ],
                   ),
@@ -196,14 +195,12 @@ class AppointmentDetailState extends State<AppointmentDetail> {
                             language == eng
                                 ? 'Date'
                                 : language == rus ? "День" : "Kun",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: fontstyle),
                       ),
                       Expanded(
                         flex: 1,
-                        child: Text(
-                          widget.appointment.appointmentDate,
-                          textAlign: TextAlign.right,
-                        ),
+                        child: Text(widget.appointment.appointmentDate,
+                            textAlign: TextAlign.right, style: fontstyle),
                       )
                     ],
                   ),
@@ -216,19 +213,16 @@ class AppointmentDetailState extends State<AppointmentDetail> {
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                        flex: 1,
-                        child: Text(
-                            language == eng
-                                ? 'Time'
-                                : language == rus ? "Время" : "Vaqti",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
+                          flex: 1,
+                          child: Text(
+                              language == eng
+                                  ? 'Time'
+                                  : language == rus ? "Время" : "Vaqti",
+                              style: fontstyle)),
                       Expanded(
                         flex: 1,
-                        child: Text(
-                          widget.appointment.appointmentTime,
-                          textAlign: TextAlign.right,
-                        ),
+                        child: Text(widget.appointment.appointmentTime,
+                            textAlign: TextAlign.right, style: fontstyle),
                       )
                     ],
                   ),
@@ -241,23 +235,22 @@ class AppointmentDetailState extends State<AppointmentDetail> {
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                        flex: 1,
-                        child: Text(
-                            language == eng
-                                ? "Hospital name / address"
-                                : language == rus
-                                    ? "Название / адрес больницы"
-                                    : "Kasalxonaning nomi / manzili",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
+                          flex: 1,
+                          child: Text(
+                              language == eng
+                                  ? "Hospital name / address"
+                                  : language == rus
+                                      ? "Название / адрес больницы"
+                                      : "Kasalxonaning nomi / manzili",
+                              style: fontstyle)),
                       Expanded(
                         flex: 1,
                         child: Text(
-                          widget.appointment.appointmentPlace == ""
-                              ? "-"
-                              : widget.appointment.appointmentPlace,
-                          textAlign: TextAlign.right,
-                        ),
+                            widget.appointment.appointmentPlace == ""
+                                ? "-"
+                                : widget.appointment.appointmentPlace,
+                            textAlign: TextAlign.right,
+                            style: fontstyle),
                       )
                     ],
                   ),
@@ -270,21 +263,20 @@ class AppointmentDetailState extends State<AppointmentDetail> {
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                        flex: 1,
-                        child: Text(
-                            language == eng
-                                ? 'Notes'
-                                : language == rus ? "Заметки" : "Izohlar",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
+                          flex: 1,
+                          child: Text(
+                              language == eng
+                                  ? 'Notes'
+                                  : language == rus ? "Заметки" : "Izohlar",
+                              style: fontstyle)),
                       Expanded(
                         flex: 1,
                         child: Text(
-                          widget.appointment.appointmentNotes == ""
-                              ? "-"
-                              : widget.appointment.appointmentNotes,
-                          textAlign: TextAlign.right,
-                        ),
+                            widget.appointment.appointmentNotes == ""
+                                ? "-"
+                                : widget.appointment.appointmentNotes,
+                            textAlign: TextAlign.right,
+                            style: fontstyle),
                       )
                     ],
                   ),
@@ -297,21 +289,20 @@ class AppointmentDetailState extends State<AppointmentDetail> {
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                        flex: 1,
-                        child: Text(
-                            language == eng
-                                ? "Reminder"
-                                : language == rus ? "Напоминание" : "Eslatma",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
+                          flex: 1,
+                          child: Text(
+                              language == eng
+                                  ? "Reminder"
+                                  : language == rus ? "Напоминание" : "Eslatma",
+                              style: fontstyle)),
                       Expanded(
                         flex: 1,
                         child: Text(
-                          widget.appointment.alarmTime == ""
-                              ? "-"
-                              : widget.appointment.alarmTime,
-                          textAlign: TextAlign.right,
-                        ),
+                            widget.appointment.alarmTime == ""
+                                ? "-"
+                                : widget.appointment.alarmTime,
+                            textAlign: TextAlign.right,
+                            style: fontstyle),
                       )
                     ],
                   ),

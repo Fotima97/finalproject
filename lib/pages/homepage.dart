@@ -14,8 +14,10 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:connectivity/connectivity.dart';
 
-List<String> savedImages = [];
+String profileImage;
 var connectivity;
+User userData;
+int medicationIndex;
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -36,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //getRemindersforNotification();
     checkLanguage();
     _getProfilevalues();
-    getsavedImages();
+    getProfileImage();
     checkConnectivity();
 
     super.initState();
@@ -51,21 +53,23 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  getsavedImages() async {
+  getProfileImage() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    if (preferences.getStringList(photos) != null) {
-      savedImages = preferences.getStringList(photos);
+    if (preferences.getString(profile) != null) {
+      profileImage = preferences.getString(profile);
     } else {
-      savedImages = [];
+      profileImage = '';
     }
   }
 
   _getProfilevalues() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String fullname;
+    String userName;
     if (preferences.getString(userFullName) != null) {
-      fullname = preferences.getString(userFullName);
-      await DBProvider.db.getUser(fullName);
+      userName = preferences.getString(userFullName);
+      await DBProvider.db.getUser(userName).then((result) {
+        user = result;
+      });
     } else {
       user = new User(
           fullName: "-",
@@ -74,26 +78,6 @@ class _MyHomePageState extends State<MyHomePage> {
           bloodType: "-",
           allergies: "-");
     }
-    // if (preferences.getString(userBirthDate) != null) {
-    //   birthdate = preferences.getString(userBirthDate);
-    // } else {
-    //   birthdate = "...";
-    // }
-    // if (preferences.getString(userEmail) != null) {
-    //   email = preferences.getString(userEmail);
-    // } else {
-    //   email = "...";
-    // }
-    // if (preferences.getString(userBloodType) != null) {
-    //   bloodtype = preferences.getString(userBloodType);
-    // } else {
-    //   bloodtype = "...";
-    // }
-    // if (preferences.getString(userAllergies) != null) {
-    //   allergise = preferences.getString(userAllergies);
-    // } else {
-    //   allergise = "...";
-    // }
   }
 
   checkLanguage() async {
@@ -123,12 +107,10 @@ class _MyHomePageState extends State<MyHomePage> {
               ? "Profile"
               : language == rus ? "Профиль" : "Profil",
           child: MaterialButton(
-            color: Color(0xFFAE80FC),
+            color: Color(0xFF9169FF),
             onPressed: () {
-              MaterialPageRoute(
-                  builder: (context) => ProfilePage(
-                        user: user,
-                      ));
+              userData = user;
+              Navigator.pushNamed(context, '/profile');
             },
             minWidth: 20.0,
             child: Icon(
@@ -204,7 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               onTap: () {
-                newMedication = false;
+                medicationIndex = 0;
                 Navigator.pushNamed(context, '/medicines');
               },
             ),

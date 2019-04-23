@@ -2,6 +2,7 @@ import 'package:finalproject/helpers/app_constants.dart';
 import 'package:finalproject/helpers/dbProvider.dart';
 import 'package:finalproject/helpers/medicationModel.dart';
 import 'package:finalproject/helpers/reminderModel.dart';
+import 'package:finalproject/pages/homepage.dart';
 import 'package:finalproject/pages/languagepage.dart';
 import 'package:finalproject/pages/medicinespage.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,7 +12,6 @@ import 'package:intl/intl.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 String dose = "";
-bool newMedication = false;
 
 class AddMedicine extends StatefulWidget {
   AddMedicine({Key key, this.action, this.medication, this.reminders})
@@ -41,6 +41,16 @@ class _AddMedicineState extends State<AddMedicine> {
   String alarmTime1;
   String alarmTime2;
   String alarmTime3;
+  BoxDecoration containerDecoration = BoxDecoration(
+      borderRadius: BorderRadius.circular(8.0),
+      color: Colors.white,
+      boxShadow: <BoxShadow>[
+        BoxShadow(
+          offset: Offset(5.0, 5.0),
+          color: Color(0xffEDEDED),
+          blurRadius: 5.0,
+        )
+      ]);
 
   void radioValueChanged(int value) {
     setState(() {
@@ -210,51 +220,60 @@ class _AddMedicineState extends State<AddMedicine> {
     List<Widget> notifications = new List<Widget>();
     if (_switchvalue) {
       for (int i = 0; i < number; i++) {
-        Widget widget = Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(language == eng
-                      ? "Alarm time"
-                      : language == rus ? "Время будильника" : "Signal vaqti"),
-                  InkWell(
-                    child: Container(
-                        padding: EdgeInsets.all(5.0),
-                        width: 150.0,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(3.0),
-                            border: Border.all(color: Colors.grey)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Icon(Icons.timer),
-                            Text(
-                              i == 0
-                                  ? alarmTime
-                                  : i == 1
-                                      ? alarmTime1
-                                      : i == 2
-                                          ? alarmTime2
-                                          : i == 3 ? alarmTime3 : alarmTime,
-                              style: TextStyle(fontSize: 12.0),
-                            ),
-                          ],
-                        )),
-                    onTap: () {
-                      _showTimeKeeper(context, i);
-                    },
-                  )
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-          ],
-        );
+        Widget widget = Container(
+            padding: EdgeInsets.only(left: 8.0),
+            decoration: containerDecoration,
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        language == eng
+                            ? "Alarm time"
+                            : language == rus
+                                ? "Время будильника"
+                                : "Signal vaqti",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      InkWell(
+                        child: Container(
+                            padding: EdgeInsets.all(5.0),
+                            width: 150.0,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(3.0),
+                                border: Border.all(color: Colors.grey)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Icon(Icons.timer,color: Colors.grey,),
+                                Text(
+                                  i == 0
+                                      ? alarmTime
+                                      : i == 1
+                                          ? alarmTime1
+                                          : i == 2
+                                              ? alarmTime2
+                                              : i == 3 ? alarmTime3 : alarmTime,
+                                  style: TextStyle(fontSize: 12.0, color: Colors.grey),
+                                ),
+                              ],
+                            )),
+                        onTap: () {
+                          _showTimeKeeper(context, i);
+                        },
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+              ],
+            ));
+
         notifications.add(widget);
       }
     }
@@ -309,8 +328,8 @@ class _AddMedicineState extends State<AddMedicine> {
       ),
       body: SafeArea(
         child: Container(
-          // color: Color(0xFFF5F6FD),
           decoration: BoxDecoration(
+              color: Color(0xfffdfdfe),
               image: DecorationImage(
                   image: AssetImage("assets/pills.jpg"),
                   fit: BoxFit.cover,
@@ -330,121 +349,108 @@ class _AddMedicineState extends State<AddMedicine> {
               primary: true,
               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
               children: <Widget>[
-                Text(
-                  language == eng
-                      ? "Name"
-                      : language == rus ? "Название" : "Ismi",
-                  style: TextStyle(color: Colors.grey, fontSize: 16.0),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
                 Container(
-                    padding: EdgeInsets.all(5),
-                    child: TextField(
-                      controller: _nameController,
-                    ),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0))),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Text(
-                  language == eng
-                      ? "How it looks?"
-                      : language == rus
-                          ? "Как оно выглядит"
-                          : "Qanday korinishda?",
-                  style: TextStyle(color: Colors.grey, fontSize: 16.0),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0)),
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  decoration: containerDecoration,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.all(5.0),
-                        height: 80.0,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: <Widget>[
-                            getPillShapes(circlepillShape),
-                            getPillShapes(pillShape),
-                            getPillShapes(heartShape),
-                            getPillShapes(bottleShape),
-                            getPillShapes(infusionShape),
-                            getPillShapes(lotionShape),
-                            getPillShapes(triangleShape),
-                            getPillShapes(starShape),
-                            getPillShapes(streamlineShape),
-                            getPillShapes(pasteShape),
-                          ],
+                      Text(
+                        language == eng
+                            ? "Name"
+                            : language == rus ? "Название" : "Ismi",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16.0,
                         ),
                       ),
-                      //  Divider(),
-                      Container(
-                        padding: EdgeInsets.all(5.0),
-                        height: 80.0,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: <Widget>[
-                            drawCircle(blueAccent),
-                            drawCircle(red),
-                            drawCircle(orange),
-                            drawCircle(purpleAccent),
-                            drawCircle(cyan),
-                            drawCircle(green),
-                            drawCircle(brown),
-                            drawCircle(indigo),
-                            drawCircle(teal),
-                            drawCircle(amber),
-                            drawCircle(lime),
-                          ],
-                        ),
+                      SizedBox(
+                        height: 10.0,
                       ),
+                      Container(
+                          padding: EdgeInsets.all(5),
+                          child: TextField(
+                            controller: _nameController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8.0))),
                     ],
                   ),
                 ),
                 SizedBox(
                   height: 20.0,
                 ),
-                Text(
-                  language == eng ? "Dose" : language == rus ? "Доза" : "Doza",
-                  style: TextStyle(color: Colors.grey, fontSize: 16.0),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
                 Container(
-                  padding: EdgeInsets.all(5.0),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0)),
+                  decoration: containerDecoration,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      TextField(
-                        controller: _doseController,
-                        keyboardType:
-                            TextInputType.numberWithOptions(decimal: true),
-                        decoration: InputDecoration(),
+                      Text(
+                        language == eng
+                            ? "How it looks?"
+                            : language == rus
+                                ? "Как оно выглядит"
+                                : "Qanday korinishda?",
+                        style: TextStyle(color: Colors.grey, fontSize: 16.0),
                       ),
                       SizedBox(
                         height: 10.0,
                       ),
-                      ListTile(
-                        title: Text(language == eng
-                            ? "Units"
-                            : language == rus ? "Единицы" : "Birliklari"),
-                        trailing: Icon(Icons.chevron_right),
-                        subtitle: Text("$dose"),
-                        onTap: () {
-                          Navigator.pushNamed(context, '/units');
-                        },
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8.0)),
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 5.0),
+                              height: 80.0,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: <Widget>[
+                                  getPillShapes(circlepillShape),
+                                  getPillShapes(pillShape),
+                                  getPillShapes(heartShape),
+                                  getPillShapes(bottleShape),
+                                  getPillShapes(infusionShape),
+                                  getPillShapes(lotionShape),
+                                  getPillShapes(triangleShape),
+                                  getPillShapes(starShape),
+                                  getPillShapes(streamlineShape),
+                                  getPillShapes(pasteShape),
+                                ],
+                              ),
+                            ),
+                            //  Divider(),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 5.0),
+                              height: 80.0,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: <Widget>[
+                                  drawCircle(blueAccent),
+                                  drawCircle(red),
+                                  drawCircle(orange),
+                                  drawCircle(purpleAccent),
+                                  drawCircle(cyan),
+                                  drawCircle(green),
+                                  drawCircle(brown),
+                                  drawCircle(indigo),
+                                  drawCircle(teal),
+                                  drawCircle(amber),
+                                  drawCircle(lime),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       )
                     ],
                   ),
@@ -452,72 +458,139 @@ class _AddMedicineState extends State<AddMedicine> {
                 SizedBox(
                   height: 20.0,
                 ),
-                Text(
-                  language == eng ? "Times" : language == rus ? "Раз" : "Marta",
-                  style: TextStyle(color: Colors.grey, fontSize: 16.0),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  decoration: containerDecoration,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        language == eng
+                            ? "Dose"
+                            : language == rus ? "Доза" : "Doza",
+                        style: TextStyle(color: Colors.grey, fontSize: 16.0),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                          padding: EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8.0)),
+                          child: Column(
+                            children: <Widget>[
+                              TextField(
+                                style: TextStyle(color: Colors.grey),
+                                controller: _doseController,
+                                keyboardType: TextInputType.numberWithOptions(
+                                    decimal: true),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                            ],
+                          )),
+                    ],
+                  ),
                 ),
                 SizedBox(
-                  height: 10.0,
+                  height: 15.0,
                 ),
                 Container(
-                  padding: EdgeInsets.all(5.0),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  // padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  decoration: containerDecoration,
+                  child: ListTile(
+                    title: Text(language == eng
+                        ? "Units"
+                        : language == rus ? "Единицы" : "Birliklari", style: TextStyle(color: Colors.grey),),
+                    trailing: Icon(Icons.chevron_right, color: Colors.grey,),
+                    subtitle: Text("$dose",style: TextStyle(color: Colors.grey),),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/units');
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Container(
+                  padding: EdgeInsets.all(8.0),
+                  decoration: containerDecoration,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Radio(
-                            groupValue: _radioValue,
-                            value: 0,
-                            onChanged: (int value) {
-                              radioValueChanged(value);
-                            },
-                            activeColor: primaryColor,
-                          ),
-                          Text("1"),
-                        ],
+                      Text(
+                        language == eng
+                            ? "Times"
+                            : language == rus ? "Раз" : "Marta",
+                        style: TextStyle(color: Colors.grey, fontSize: 16.0),
                       ),
-                      Row(
-                        children: <Widget>[
-                          Radio(
-                            groupValue: _radioValue,
-                            value: 1,
-                            onChanged: (int value) {
-                              radioValueChanged(value);
-                            },
-                            activeColor: primaryColor,
-                          ),
-                          Text("2"),
-                        ],
+                      SizedBox(
+                        height: 10.0,
                       ),
-                      Row(
-                        children: <Widget>[
-                          Radio(
-                            groupValue: _radioValue,
-                            value: 2,
-                            onChanged: (int value) {
-                              radioValueChanged(value);
-                            },
-                            activeColor: primaryColor,
-                          ),
-                          Text("3"),
-                        ],
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Radio(
-                            groupValue: _radioValue,
-                            value: 3,
-                            onChanged: (int value) {
-                              radioValueChanged(value);
-                            },
-                            activeColor: primaryColor,
-                          ),
-                          Text("4"),
-                        ],
+                      Container(
+                        padding: EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8.0)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Radio(
+                                  groupValue: _radioValue,
+                                  value: 0,
+                                  onChanged: (int value) {
+                                    radioValueChanged(value);
+                                  },
+                                  activeColor: primaryColor,
+                                ),
+                                Text("1",style: TextStyle(color: Colors.grey),),
+                              ],
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Radio(
+                                  groupValue: _radioValue,
+                                  value: 1,
+                                  onChanged: (int value) {
+                                    radioValueChanged(value);
+                                  },
+                                  activeColor: primaryColor,
+                                ),
+                                Text("2",style: TextStyle(color: Colors.grey),),
+                              ],
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Radio(
+                                  groupValue: _radioValue,
+                                  value: 2,
+                                  onChanged: (int value) {
+                                    radioValueChanged(value);
+                                  },
+                                  activeColor: primaryColor,
+                                ),
+                                Text("3",style: TextStyle(color: Colors.grey),),
+                              ],
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Radio(
+                                  groupValue: _radioValue,
+                                  value: 3,
+                                  onChanged: (int value) {
+                                    radioValueChanged(value);
+                                  },
+                                  activeColor: primaryColor,
+                                ),
+                                Text("4",style: TextStyle(color: Colors.grey),),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -533,125 +606,147 @@ class _AddMedicineState extends State<AddMedicine> {
                       borderRadius: BorderRadius.circular(8.0)),
                   child: Column(
                     children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(language == eng
-                              ? "Start Date"
-                              : language == rus
-                                  ? "Дата начала"
-                                  : "Boshlanish kuni"),
-                          InkWell(
-                            child: Container(
-                                padding: EdgeInsets.all(5.0),
-                                width: 150.0,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(3.0),
-                                    border: Border.all(color: Colors.grey)),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Icon(Icons.today),
-                                    Text(
-                                      formDate(startDate),
-                                      style: TextStyle(fontSize: 12.0),
-                                    ),
-                                  ],
-                                )),
-                            onTap: () {
-                              _showDatePicker(context, 1);
-                            },
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(language == eng
-                              ? "End Date"
-                              : language == rus
-                                  ? "Дата окончания"
-                                  : "Tugash sanasi"),
-                          InkWell(
-                            child: Container(
-                                padding: EdgeInsets.all(5.0),
-                                width: 150.0,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(3.0),
-                                    border: Border.all(color: Colors.grey)),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Icon(Icons.today),
-                                    Text(
-                                      formDate(endDate),
-                                      style: TextStyle(fontSize: 12.0),
-                                    ),
-                                  ],
-                                )),
-                            onTap: () {
-                              _showDatePicker(context, 2);
-                            },
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 10.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(language == eng
-                              ? "Duration"
-                              : language == rus
-                                  ? "Продолжительность"
-                                  : "Davomiyligi"),
-                          Container(
-                              width: 150.0,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(
-                                    duration.toString(),
-                                    textAlign: TextAlign.right,
-                                  ),
-                                  SizedBox(
-                                    width: 5.0,
-                                  ),
-                                  Text(language == eng
-                                      ? "days"
-                                      : language == rus ? "дней" : "kun")
-                                ],
-                              ))
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            language == eng
-                                ? "Reminder"
-                                : language == rus ? "Напоминание" : "Eslatma",
-                          ),
-                          Container(
-                            width: 20.0,
-                          ),
-                          Container(
-                            child: Switch(
-                              value: _switchvalue,
-                              onChanged: (bool value) {
-                                _onSwitchChange(value);
+                      Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: containerDecoration,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(language == eng
+                                ? "Start Date"
+                                : language == rus
+                                    ? "Дата начала"
+                                    : "Boshlanish kuni", style: TextStyle(color: Colors.grey),),
+                            InkWell(
+                              child: Container(
+                                  padding: EdgeInsets.all(5.0),
+                                  width: 150.0,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(3.0),
+                                      border: Border.all(color: Colors.grey)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Icon(Icons.today, color: Colors.grey,),
+                                      Text(
+                                        formDate(startDate),
+                                        style: TextStyle(fontSize: 12.0,color: Colors.grey),
+                                      ),
+                                    ],
+                                  )),
+                              onTap: () {
+                                _showDatePicker(context, 1);
                               },
-                              activeColor: primaryColor,
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: containerDecoration,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(language == eng
+                                ? "End Date"
+                                : language == rus
+                                    ? "Дата окончания"
+                                    : "Tugash sanasi", style: TextStyle(color: Colors.grey)),
+                            InkWell(
+                              child: Container(
+                                  padding: EdgeInsets.all(5.0),
+                                  width: 150.0,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(3.0),
+                                      border: Border.all(color: Colors.grey)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Icon(Icons.today, color: Colors.grey,),
+                                      Text(
+                                        formDate(endDate),
+                                        style: TextStyle(fontSize: 12.0, color: Colors.grey),
+                                      ),
+                                    ],
+                                  )),
+                              onTap: () {
+                                _showDatePicker(context, 2);
+                              },
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 20.0),
+                      Container(
+                        padding: EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              language == eng
+                                  ? "Duration"
+                                  : language == rus
+                                      ? "Продолжительность"
+                                      : "Davomiyligi",
+                              style: TextStyle(color: Colors.grey),
                             ),
-                          )
-                        ],
+                            Container(
+                                width: 150.0,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Widget>[
+                                    Text(
+                                      duration.toString(),
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                    SizedBox(
+                                      width: 5.0,
+                                    ),
+                                    Text(
+                                      language == eng
+                                          ? "days"
+                                          : language == rus ? "дней" : "kun",
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ))
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              language == eng
+                                  ? "Reminder"
+                                  : language == rus ? "Напоминание" : "Eslatma",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            Container(
+                              width: 20.0,
+                            ),
+                            Container(
+                              child: Switch(
+                                value: _switchvalue,
+                                onChanged: (bool value) {
+                                  _onSwitchChange(value);
+                                },
+                                activeColor: primaryColor,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -660,9 +755,15 @@ class _AddMedicineState extends State<AddMedicine> {
                   children: createNotificationcontrols(_radioValue + 1),
                 ),
                 SizedBox(
-                  height: 10.0,
+                  height: 20.0,
                 ),
-                Padding(
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal:8.0),
+                  decoration: containerDecoration,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+   Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
                     language == eng
@@ -674,9 +775,12 @@ class _AddMedicineState extends State<AddMedicine> {
                 TextField(
                   controller: notes,
                   keyboardType: TextInputType.multiline,
-                  maxLines: 5,
-                  decoration: InputDecoration(),
+                  maxLines: 3,
+                  decoration: InputDecoration(border: InputBorder.none),
                 ),
+                    ],
+                  ),)
+             
               ],
             ),
           ),
@@ -684,8 +788,19 @@ class _AddMedicineState extends State<AddMedicine> {
       ),
       bottomNavigationBar: GestureDetector(
         child: Container(
+
+          decoration: BoxDecoration(
+                                color: accentColor,
+
+              boxShadow: <BoxShadow>[
+        BoxShadow(
+          offset: Offset(-5.0, -5.0),
+          color: Color(0xffEDEDED),
+          blurRadius: 5.0,
+        )
+      ]
+          ),
           height: 60.0,
-          color: accentColor,
           child: Center(
             child: Text(
               language == eng
@@ -746,8 +861,7 @@ class _AddMedicineState extends State<AddMedicine> {
                   token: false));
             }
           }
-          newMedication = true;
-
+          medicationIndex = 1;
           Navigator.popUntil(context, (route) {
             return route.settings.name == "/medicines";
           });

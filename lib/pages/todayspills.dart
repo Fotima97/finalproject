@@ -21,6 +21,16 @@ class TodayPills extends StatefulWidget {
 }
 
 class TodayPillsState extends State<TodayPills> {
+  BoxDecoration containerDecoration = BoxDecoration(
+      borderRadius: BorderRadius.circular(8.0),
+      color: Colors.white,
+      boxShadow: <BoxShadow>[
+        BoxShadow(
+          offset: Offset(5.0, 5.0),
+          color: Color(0xffEDEDED),
+          blurRadius: 5.0,
+        )
+      ]);
   List<Medication> medList = new List<Medication>();
   Future<Medication> getMedication(int id) async {
     return await DBProvider.db.getMedicationById(id);
@@ -123,48 +133,48 @@ class TodayPillsState extends State<TodayPills> {
                 Medication medication =
                     medList.firstWhere((m) => m.medId == reminder.medId);
 
-                return Column(
-                  children: <Widget>[
-                    ListTile(
-                      leading: Image.asset(
-                        medication.medId == null ? pillShape : medication.shape,
-                        width: 25.0,
-                        height: 40.0,
-                        color: Color(medication.medId == null
-                            ? green
-                            : medication.color),
-                      ),
-                      title: Text(medication.medName),
-                      subtitle: Text(
-                          medication.dose.toString() + " " + medication.units),
-                      trailing: Text(reminder.notificationTime),
-                      onTap: () {
-                        if (Platform.isAndroid) {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return createAndroidAlertBox(
-                                    context,
-                                    medication.medName,
-                                    medication.dose,
-                                    medication.units,
-                                    reminder);
-                                ;
-                              });
-                        } else {
-                          showDialog(
-                              context: context,
-                              child: createCupertinoDialogBox(
+                return Container(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
+                  margin: EdgeInsets.only(bottom: 10.0),
+                  decoration: containerDecoration,
+                  child: ListTile(
+                    leading: Image.asset(
+                      medication.medId == null ? pillShape : medication.shape,
+                      width: 25.0,
+                      height: 40.0,
+                      color: Color(
+                          medication.medId == null ? green : medication.color),
+                    ),
+                    title: Text(medication.medName),
+                    subtitle: Text(
+                        medication.dose.toString() + " " + medication.units),
+                    trailing: Text(reminder.notificationTime),
+                    onTap: () {
+                      if (Platform.isAndroid) {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return createAndroidAlertBox(
                                   context,
                                   medication.medName,
                                   medication.dose,
                                   medication.units,
-                                  reminder));
-                        }
-                      },
-                    ),
-                    Divider()
-                  ],
+                                  reminder);
+                              ;
+                            });
+                      } else {
+                        showDialog(
+                            context: context,
+                            child: createCupertinoDialogBox(
+                                context,
+                                medication.medName,
+                                medication.dose,
+                                medication.units,
+                                reminder));
+                      }
+                    },
+                  ),
                 );
               },
             );

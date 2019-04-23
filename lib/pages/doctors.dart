@@ -40,24 +40,33 @@ class _DoctorsPageState extends State<DoctorsPage> {
                   Appointment appointment = snapshot.data[index];
                   Future<List<Images>> imageList =
                       getImages(appointment.appointmentId);
-                  return Column(
-                    children: <Widget>[
-                      ListTile(
-                        title: Text(appointment.doctorName),
-                        subtitle: Text(appointment.specialization),
-                        trailing: Text(appointment.appointmentDate),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AppointmentDetail(
-                                        appointment: appointment,
-                                        images: imageList,
-                                      )));
-                        },
-                      ),
-                      Divider()
-                    ],
+                  return Container(
+                    padding: EdgeInsets.symmetric(vertical: 5.0),
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        color: Colors.white,
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                            offset: Offset(5.0, 5.0),
+                            color: Color(0xffEDEDED),
+                            blurRadius: 5.0,
+                          )
+                        ]),
+                    child: ListTile(
+                      title: Text(appointment.doctorName),
+                      subtitle: Text(appointment.specialization),
+                      trailing: Text(appointment.appointmentDate),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AppointmentDetail(
+                                      appointment: appointment,
+                                      images: imageList,
+                                    )));
+                      },
+                    ),
                   );
                 },
               );

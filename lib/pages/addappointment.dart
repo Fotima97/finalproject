@@ -32,7 +32,16 @@ class _AddAppointmentState extends State<AddAppointment> {
   File image;
   bool _alarm = false;
   List<String> appointmentImages = [];
-
+  BoxDecoration containerDecoration = BoxDecoration(
+      borderRadius: BorderRadius.circular(8.0),
+      color: Colors.white,
+      boxShadow: <BoxShadow>[
+        BoxShadow(
+          offset: Offset(5.0, 5.0),
+          color: Color(0xffEDEDED),
+          blurRadius: 5.0,
+        )
+      ]);
   String timeText =
       language == eng ? 'Time' : language == rus ? "Время" : "Vaqti";
   String notificationTime = language == eng
@@ -95,22 +104,24 @@ class _AddAppointmentState extends State<AddAppointment> {
 
   Widget createTimePicker(
       TextEditingController controller, BuildContext context, String text) {
-    return InkWell(
-      onTap: () {
-        _showTimeKeeper(context, controller);
-      },
-      child: TextField(
-        enabled: false,
-        controller: controller,
-        decoration: InputDecoration(
-          suffixIcon: Icon(Icons.access_time),
-          filled: true,
-          fillColor: Colors.white,
-          focusedBorder: OutlineInputBorder(),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-              borderSide: BorderSide(color: Colors.red, width: 3.0)),
-          hintText: text,
+    return Container(
+      padding: EdgeInsets.all(8.0),
+      decoration: containerDecoration,
+      child: InkWell(
+        onTap: () {
+          _showTimeKeeper(context, controller);
+        },
+        child: TextField(
+          enabled: false,
+          controller: controller,
+          decoration: InputDecoration(
+            suffixIcon: Icon(Icons.access_time),
+            filled: true,
+            fillColor: Colors.white,
+            focusedBorder: OutlineInputBorder(),
+            border: InputBorder.none,
+            hintText: text,
+          ),
         ),
       ),
     );
@@ -225,11 +236,12 @@ class _AddAppointmentState extends State<AddAppointment> {
             : language == rus ? "Прием к врачу" : "Shifokor ko'rigi"),
       ),
       body: Container(
-        color: Colors.white,
+        color: Color(0xfffdfdfe),
         child: ListView(
           padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
           children: <Widget>[
             Container(
+                padding: EdgeInsets.all(8.0),
                 child: TextField(
                   decoration: InputDecoration(
                       suffixIcon: Container(
@@ -240,19 +252,15 @@ class _AddAppointmentState extends State<AddAppointment> {
                           color: Colors.grey,
                         ),
                       ),
-                      filled: true,
+                      //filled: true,
                       fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          borderSide: BorderSide(width: 3.0)),
+                      border: InputBorder.none,
                       hintText: language == eng
                           ? "Doctor"
                           : language == rus ? "Врач" : "Shifokor"),
                   controller: _doctorController,
                 ),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0))),
+                decoration: containerDecoration),
             SizedBox(
               height: 15.0,
             ),
@@ -260,24 +268,26 @@ class _AddAppointmentState extends State<AddAppointment> {
             SizedBox(
               height: 15.0,
             ),
-            InkWell(
-              onTap: () {
-                _showDatePicker(context);
-              },
-              child: TextField(
-                enabled: false,
-                controller: _dateController,
-                decoration: InputDecoration(
-                  suffixIcon: Icon(Icons.date_range),
-                  filled: true,
-                  fillColor: Colors.white,
-                  focusedBorder: OutlineInputBorder(),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(color: Colors.red, width: 3.0)),
-                  hintText: language == eng
-                      ? 'Date'
-                      : language == rus ? "День" : "Kun",
+            Container(
+              decoration: containerDecoration,
+              padding: EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  _showDatePicker(context);
+                },
+                child: TextField(
+                  enabled: false,
+                  controller: _dateController,
+                  decoration: InputDecoration(
+                    suffixIcon: Icon(Icons.date_range),
+                    filled: true,
+                    fillColor: Colors.white,
+                    focusedBorder: OutlineInputBorder(),
+                    border: InputBorder.none,
+                    hintText: language == eng
+                        ? 'Date'
+                        : language == rus ? "День" : "Kun",
+                  ),
                 ),
               ),
             ),
@@ -289,6 +299,7 @@ class _AddAppointmentState extends State<AddAppointment> {
               height: 15.0,
             ),
             Container(
+                padding: EdgeInsets.all(8.0),
                 child: TextField(
                   decoration: InputDecoration(
                       suffixIcon: Container(
@@ -302,9 +313,7 @@ class _AddAppointmentState extends State<AddAppointment> {
                           ),
                       filled: true,
                       fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          borderSide: BorderSide(width: 3.0)),
+                      border: InputBorder.none,
                       hintText: language == eng
                           ? "Hospital name / address"
                           : language == rus
@@ -312,13 +321,12 @@ class _AddAppointmentState extends State<AddAppointment> {
                               : "Kasalxonaning nomi / manzili"),
                   controller: _placeController,
                 ),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0))),
+                decoration: containerDecoration),
             SizedBox(
               height: 15.0,
             ),
             Container(
+                padding: EdgeInsets.all(8.0),
                 child: TextField(
                   keyboardType: TextInputType.multiline,
                   maxLines: 3,
@@ -326,46 +334,46 @@ class _AddAppointmentState extends State<AddAppointment> {
                       suffixIcon: Icon(Icons.comment),
                       filled: true,
                       fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          borderSide: BorderSide(width: 3.0)),
+                      border: InputBorder.none,
                       hintText: language == eng
                           ? 'Notes'
                           : language == rus ? "Заметки" : "Izohlar"),
                   controller: _notesController,
                 ),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0))),
+                decoration: containerDecoration),
             SizedBox(
               height: 15.0,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.only(left: 5.0),
-                  child: Text(
-                    language == eng
-                        ? "Reminder"
-                        : language == rus ? "Напоминание" : "Eslatma",
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(left: 5.0),
+                    child: Text(
+                      language == eng
+                          ? "Reminder"
+                          : language == rus ? "Напоминание" : "Eslatma",
+                      style: TextStyle(color: Colors.grey),
+                    ),
                   ),
-                ),
-                Container(
-                  width: 20.0,
-                ),
-                Container(
-                  child: Switch(
-                    value: _alarm,
-                    onChanged: (bool value) {
-                      setState(() {
-                        _alarm = value;
-                      });
-                    },
-                    activeColor: primaryColor,
+                  Container(
+                    width: 20.0,
                   ),
-                )
-              ],
+                  Container(
+                    child: Switch(
+                      value: _alarm,
+                      onChanged: (bool value) {
+                        setState(() {
+                          _alarm = value;
+                        });
+                      },
+                      activeColor: primaryColor,
+                    ),
+                  )
+                ],
+              ),
             ),
             SizedBox(
               height: 20.0,
@@ -373,7 +381,7 @@ class _AddAppointmentState extends State<AddAppointment> {
             notificationTimePicker(
                 _alarm, context, _notificationController, notificationTime),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -385,7 +393,7 @@ class _AddAppointmentState extends State<AddAppointment> {
                             : language == rus
                                 ? "Дополнительные файлы"
                                 : "Qo'shimcha faylar",
-                        style: TextStyle(fontSize: 16.0),
+                        style: TextStyle(fontSize: 16.0, color: Colors.grey),
                         textAlign: TextAlign.left,
                       ),
                       MaterialButton(

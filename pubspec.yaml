@@ -35,9 +35,9 @@ dependencies:
   connectivity: ^0.4.2
   flushbar: ^1.2.3
   transparent_image: ^1.0.0
-  dio: ^2.1.0
+  google_maps_flutter: ^0.5.7
+  font_awesome_flutter: ^8.4.0
 
-   # google_maps_flutter: ^0.3.0+2
 
 
 
@@ -97,6 +97,8 @@ flutter:
   - assets/hospitalIcon.png
   - assets/specialization.png
   - assets/specializationIcon.png
+  - assets/profile.png
+  - assets/wallpaper.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
@@ -109,17 +111,17 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+  fonts:
+    - family: PlayfairDisplay
+      fonts:
+         - asset: assets/fonts/PlayfairDisplay-Regular.ttf
+         - asset: assets/fonts/PlayfairDisplay-Italic.ttf
+           style: italic
+    - family: Roboto
+      fonts:
+         - asset: assets/fonts/Roboto-Italic.ttf
+         - asset: assets/fonts/Roboto-Light.ttf
+         - asset: assets/fonts/Roboto-Medium.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.io/custom-fonts/#from-packages

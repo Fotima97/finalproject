@@ -34,6 +34,8 @@ class DBProvider {
   }
 
   Future _create(Database db, int version) async {
+       await db.execute(
+        'CREATE TABLE $usersTable ($userId INTEGER PRIMARY KEY AUTOINCREMENT,$fullName TEXT, $birthdatefield TEXT, $emailfield TEXT, $bloodType TEXT, $allergies TEXT)');
     await db.execute(
         'CREATE TABLE $medicationTable ($medId INTEGER PRIMARY KEY AUTOINCREMENT, $medName TEXT, $shape TEXT, $color INTEGER, $dosedb  INTEGER, $units TEXT, $times INTEGER, $startDate TEXT, $endDate TEXT, $duration INTEGER, $notes TEXT)');
     await db.execute(
@@ -42,8 +44,7 @@ class DBProvider {
         'CREATE TABLE $appointmentTable ($appointmentId INTEGER PRIMARY KEY AUTOINCREMENT, $doctorName TEXT, $appointmentDate TEXT, $appointmentTime TEXT,$appointmentPlaceField TEXT, $specializationField  TEXT, $appointmentNotesField TEXT, $alarm BIT, $alarmTime TEXT)');
     await db.execute(
         'CREATE TABLE $imagesTable ($appointmentImageId INTEGER PRIMARY KEY AUTOINCREMENT, $appointmentId INTEGER, $imageSrc TEXT,Constraint fk_appointmentId FOREIGN KEY($appointmentId) REFERENCES $appointmentTable($appointmentId))');
-    await db.execute(
-        'CREATE TABLE $usersTable($fullName TEXT, $birthdatefield TEXT, $emailfield Text, $bloodType Text, $allergies Text)');
+ 
   }
 
   addMedication(Medication newMed) async {
@@ -56,7 +57,7 @@ class DBProvider {
   createUser(User user) async {
     final db = await database;
     var res = await db.rawInsert(
-        'INSERT Into $usersTable ($fullName,$birthdatefield,$emailfield,$bloodType, $allergies) VALUES ("${user.fullName}", "${user.birthDate}", "${user.email}","${user.bloodType}","${user.allergies}")');
+        'INSERT Into $usersTable ($fullName, $birthdatefield, $emailfield, $bloodType, $allergies) VALUES ("${user.fullName}", "${user.birthDate}", "${user.email}", "${user.bloodType}", "${user.allergies}")');
     return res;
   }
 
@@ -100,7 +101,7 @@ class DBProvider {
     return res.isNotEmpty ? Medication.fromJson(res.first) : Null;
   }
 
-  getUser(String userName) async {
+ Future<User> getUser(String userName) async {
     final db = await database;
     var res = await db
         .query("$usersTable", where: "$fullName = ?", whereArgs: [userName]);
@@ -223,7 +224,7 @@ class DBProvider {
 
   updateUser(User newUser) async {
     final db = await database;
-    var res = await db.update("$medicationTable", newUser.toJson(),
+    var res = await db.update("$usersTable", newUser.toJson(),
         where: "$fullName = ?", whereArgs: [newUser.fullName]);
     return res;
   }

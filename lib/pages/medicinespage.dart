@@ -3,6 +3,7 @@ import 'package:finalproject/helpers/dbProvider.dart';
 import 'package:finalproject/helpers/medicationModel.dart';
 import 'package:finalproject/helpers/reminderModel.dart';
 import 'package:finalproject/pages/addmedicinepage.dart';
+import 'package:finalproject/pages/homepage.dart';
 import 'package:finalproject/pages/languagepage.dart';
 import 'package:finalproject/pages/pillslist.dart';
 import 'package:finalproject/pages/todayspills.dart';
@@ -22,35 +23,39 @@ class MedicinesPage extends StatefulWidget {
 
 class _MedicinesPageState extends State<MedicinesPage> {
   int numberodPills;
-  int _currentIndex;
+  //int _currentIndex;
   FlutterLocalNotificationsPlugin flutterLocalNotificationPlugin;
   List<Reminder> notTokenReminders = new List<Reminder>();
+  List<Medication> expiredMedications = new List<Medication>();
+  bool notifStatus = true;
   @override
   void dispose() {
     super.dispose();
     getRemindersforNotification();
+    getExpiredNotifications();
+  }
+
+  getNotificationPermission() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    if (preferences.getBool(notificationsStatus) != null) {
+      notifStatus = preferences.getBool(notificationsStatus);
+    } else {
+      notifStatus = true;
+    }
   }
 
   @override
   void initState() {
     super.initState();
-
     flutterLocalNotificationPlugin = new FlutterLocalNotificationsPlugin();
     var initializationSettingsAndroid =
         new AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettingsIOS = new IOSInitializationSettings();
     var initializationSettings = new InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
-
     flutterLocalNotificationPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
-
     getData();
-    if (newMedication) {
-      _currentIndex = 1;
-    } else {
-      _currentIndex = 0;
-    }
   }
 
   Future onSelectNotification(String payload) async {
@@ -74,22 +79,38 @@ class _MedicinesPageState extends State<MedicinesPage> {
           'repeatDailyAtTime channel id $i',
           'repeatDailyAtTime channel name $i',
           'repeatDailyAtTime description $i');
+
       var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
       var platformChannelSpecifics = new NotificationDetails(
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
       await flutterLocalNotificationPlugin.showDailyAtTime(
-          i,
-          'show daily title',
-          'Time to take your medication $i',
+          notTokenReminders[i].medId,
+          'Med Assistant',
+          'Time to take your medication',
           scheduldeTime[i],
           platformChannelSpecifics);
     }
   }
 
+  cancelNotifications() async {
+    for (int i = 0; i < expiredMedications.length; i++) {
+      await flutterLocalNotificationPlugin.cancel(expiredMedications[i].medId);
+    }
+  }
+
+  getExpiredNotifications() async {
+    await DBProvider.db.getMedicationsByEndDate().then((result) {
+      expiredMedications = result;
+    });
+    cancelNotifications();
+  }
+
   getRemindersforNotification() async {
     await DBProvider.db.getnotTokenReminders().then((result) {
       notTokenReminders = result;
-      _showNotifications();
+      if (notifStatus) {
+        _showNotifications();
+      }
     });
   }
 
@@ -99,7 +120,7 @@ class _MedicinesPageState extends State<MedicinesPage> {
 
   void onTabTapped(int index) {
     setState(() {
-      _currentIndex = index;
+      medicationIndex = index;
     });
   }
 
@@ -115,10 +136,10 @@ class _MedicinesPageState extends State<MedicinesPage> {
             ? "Medications"
             : language == rus ? "Лекарства" : "Dori vositalari"),
       ),
-      body: SafeArea(child: createTabs()[_currentIndex]),
+      body: SafeArea(child: createTabs()[medicationIndex]),
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped,
-        currentIndex: _currentIndex,
+        currentIndex: medicationIndex,
         items: [
           new BottomNavigationBarItem(
             icon: Icon(Icons.today),

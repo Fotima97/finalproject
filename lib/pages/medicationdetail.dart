@@ -118,10 +118,10 @@ class MedicationDetailsState extends State<MedicationDetails> {
                 Center(
                     child: Text(
                   widget.medication.medName,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                  style: TextStyle(fontSize: 24.0),
                 )),
                 SizedBox(
-                  height: 12.0,
+                  height: 20.0,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 10.0),
@@ -133,7 +133,7 @@ class MedicationDetailsState extends State<MedicationDetails> {
                           language == eng
                               ? "Status"
                               : language == rus ? "Статус" : "Status",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 16.0, color: Colors.grey),
                         ),
                       ),
                       Expanded(
@@ -141,6 +141,10 @@ class MedicationDetailsState extends State<MedicationDetails> {
                         child: Text(
                           widget.status,
                           textAlign: TextAlign.right,
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16.0,
+                          ),
                         ),
                       )
                     ],
@@ -152,15 +156,15 @@ class MedicationDetailsState extends State<MedicationDetails> {
                 Row(
                   children: <Widget>[
                     Expanded(
-                      flex: 1,
-                      child: Text(
+                        flex: 1,
+                        child: Text(
                           language == eng
                               ? "Start date"
                               : language == rus
                                   ? "Дата начала"
                                   : "Boshlanish vaqti",
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
+                          style: TextStyle(fontSize: 16.0, color: Colors.grey),
+                        )),
                     Expanded(
                         flex: 1,
                         child: Row(
@@ -174,6 +178,10 @@ class MedicationDetailsState extends State<MedicationDetails> {
                             Text(
                               widget.medication.startDate,
                               textAlign: TextAlign.right,
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 16.0,
+                              ),
                             ),
                           ],
                         ))
@@ -185,15 +193,15 @@ class MedicationDetailsState extends State<MedicationDetails> {
                 Row(
                   children: <Widget>[
                     Expanded(
-                      flex: 1,
-                      child: Text(
+                        flex: 1,
+                        child: Text(
                           language == eng
                               ? "End date"
                               : language == rus
                                   ? "Дата окончания"
                                   : "Tugash sanasi",
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
+                          style: TextStyle(fontSize: 16.0, color: Colors.grey),
+                        )),
                     Expanded(
                         flex: 1,
                         child: Row(
@@ -207,6 +215,10 @@ class MedicationDetailsState extends State<MedicationDetails> {
                             Text(
                               widget.medication.endDate,
                               textAlign: TextAlign.right,
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 16.0,
+                              ),
                             ),
                           ],
                         ))
@@ -220,18 +232,25 @@ class MedicationDetailsState extends State<MedicationDetails> {
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                        flex: 1,
-                        child: Text(
+                          flex: 1,
+                          child: Text(
                             language == eng
                                 ? "Notes"
                                 : language == rus ? "Заметки" : "Izohlar",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.grey,
+                            ),
+                          )),
                       Expanded(
                         flex: 1,
                         child: Text(
                           widget.medication.notes,
                           textAlign: TextAlign.right,
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16.0,
+                          ),
                         ),
                       )
                     ],
@@ -264,13 +283,20 @@ class MedicationDetailsState extends State<MedicationDetails> {
                                                   ? "Время будильника"
                                                   : "Signal vaqti",
                                           style: TextStyle(
-                                              fontWeight: FontWeight.bold),
+                                              fontSize: 16.0,
+                                              color: Colors.grey),
                                         ),
                                       ),
                                       Expanded(
                                         flex: 1,
-                                        child: Text(reminder.notificationTime,
-                                            textAlign: TextAlign.right),
+                                        child: Text(
+                                          reminder.notificationTime,
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 16.0,
+                                          ),
+                                        ),
                                       )
                                     ],
                                   ),
@@ -298,7 +324,18 @@ class MedicationDetailsState extends State<MedicationDetails> {
       bottomNavigationBar: GestureDetector(
         child: Container(
           height: 60.0,
-          color: accentColor,
+          decoration: BoxDecoration(
+                      color: accentColor,
+
+              boxShadow: <BoxShadow>[
+        BoxShadow(
+          offset: Offset(-5.0, -5.0),
+          color: Color(0xffEDEDED),
+          blurRadius: 5.0,
+        )
+      ]
+          ),
+
           child: Center(
             child: Text(
               language == eng
