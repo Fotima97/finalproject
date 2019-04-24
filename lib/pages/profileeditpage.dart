@@ -167,23 +167,23 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         }
       } else {
         Flushbar(
-          title : language == eng
-              ? "Problems with connection"
-              : language == rus
-                  ? "Проблемы с подключение"
-                  : "Ulanish bilan bog'liq muammolar",
-          message : language == eng
-              ? "Data is not uploaded to database"
-              : language == rus
-                  ? "Данные не загружены в базу данных "
-                  : "Ma'lumotlar bazaga yuklanmadi",
-          duration : Duration(seconds: 1),
-          icon : Icon(
-            Icons.info,
-            color: Colors.white,
-          ),
-          backgroundColor : Colors.red
-        )..show(context);
+            title: language == eng
+                ? "Problems with connection"
+                : language == rus
+                    ? "Проблемы с подключение"
+                    : "Ulanish bilan bog'liq muammolar",
+            message: language == eng
+                ? "Data is not uploaded to database"
+                : language == rus
+                    ? "Данные не загружены в базу данных "
+                    : "Ma'lumotlar bazaga yuklanmadi",
+            duration: Duration(seconds: 1),
+            icon: Icon(
+              Icons.info,
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.red)
+          ..show(context);
       }
     }
   }
@@ -296,7 +296,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                       decoration: containerDecoration,
                       child: TextFormField(
                         validator: (value) {
-                          if (DateTime.parse(value).runtimeType == DateTime) {
+                          if (DateTime.parse(value).runtimeType != DateTime) {
                             return language == eng
                                 ? 'Enter valid date'
                                 : language == rus

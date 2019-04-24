@@ -16,13 +16,14 @@ class _MapState extends State<Map> {
   Completer<GoogleMapController> _controller = Completer();
   static HospitalModel _hosptial;
   Set<Marker> markers = Set();
-  double zoomValue = 5.0;
+  double zoomValue = 15.0;
   @override
   void initState() {
     _hosptial = widget.hospital;
 
     // TODO: implement initState
     super.initState();
+
     markers.add(Marker(
         markerId: MarkerId(_hosptial.title),
         position: LatLng(_hosptial.lat, _hosptial.long),
@@ -34,41 +35,15 @@ class _MapState extends State<Map> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.hospital.title)),
+      appBar: AppBar(
+          title: Text(
+        widget.hospital.title,
+        style: TextStyle(fontSize: 14.0),
+      )),
       body: Stack(
         children: <Widget>[
           _googleMap(context),
-          _zoomMinusFunction(),
-          _zoomPlusFunction(),
         ],
-      ),
-    );
-  }
-
-  Widget _zoomMinusFunction() {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: IconButton(
-        icon: Icon(FontAwesomeIcons.searchMinus),
-        color: Color(0xff6200ee),
-        onPressed: () {
-          zoomValue--;
-          updateCamera(zoomValue);
-        },
-      ),
-    );
-  }
-
-  Widget _zoomPlusFunction() {
-    return Align(
-      alignment: Alignment.topRight,
-      child: IconButton(
-        icon: Icon(FontAwesomeIcons.searchMinus),
-        color: Color(0xff6200ee),
-        onPressed: () {
-          zoomValue++;
-          updateCamera(zoomValue);
-        },
       ),
     );
   }

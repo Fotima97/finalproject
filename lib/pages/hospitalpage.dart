@@ -260,6 +260,7 @@ class _HospitalPageState extends State<HospitalPage> {
                 ),
                 Divider(
                   height: 15.0,
+                  color: Colors.black,
                 ),
                 Text(
                   language == eng
@@ -351,7 +352,11 @@ class _HospitalPageState extends State<HospitalPage> {
                             : language == rus
                                 ? "Успешно добавлено"
                                 : "Muvaffaqiyatli qo'shildi",
-                        message: "",
+                        message: language == eng
+                            ? "Review is added to database"
+                            : language == rus
+                                ? "Отзыв добавлен в базу данных"
+                                : "Ko'rib chiqish bazasiga qo'shilgan",
                         duration: Duration(seconds: 3),
                         icon: Icon(
                           Icons.info,
